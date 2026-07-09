@@ -1382,55 +1382,194 @@
                         </div>
                     </div>
 
-                    <h3 style="font-size: 1.2rem; font-weight: 700; margin-top: 25px; margin-bottom: 15px; color: var(--primary);">Exemplos Práticos: LPU Claro vs. Repasse Técnico</h3>
-                    <p style="margin-bottom: 20px; font-size: 0.9rem;">Para ilustrar de forma intuitiva, veja como a incompatibilidade entre as tabelas de faturamento Claro (LPU) e repasse ao técnico (Cenários) afeta a lucratividade em três tipos de obras:</p>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; margin-top: 25px; margin-bottom: 15px; color: var(--primary);">Cenários Comparativos por Item: LPU Claro vs. Pagamento Técnico</h3>
+                    <p style="margin-bottom: 20px; font-size: 0.9rem;">Veja abaixo a auditoria item a item de faturamento LPU contra o repasse ao técnico em três endereços reais da planilha para entender as margens na prática:</p>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 35px; margin-top: 15px;">
-                        <!-- Exemplo 1 -->
-                        <div style="background-color: #ffffff; border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 35px; margin-top: 15px;">
+                        
+                        <!-- Exemplo 1: Cenário 1 (Déficit) -->
+                        <div style="background-color: #ffffff; border-radius: 12px; padding: 22px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <span style="font-size: 10px; font-weight: 700; background-color: #fee2e2; color: #ef4444; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Déficit Automático</span>
-                                <h4 style="font-weight: 700; margin-top: 10px; margin-bottom: 8px; color: var(--text-dark); font-size: 0.95rem;">1. Prédio Pequeno (1 ou 2 Caixas)</h4>
-                                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 15px;">O faturamento variável da Claro (LPU) não atinge o valor mínimo fixo devido ao técnico parceiro.</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <span style="font-size: 10px; font-weight: 700; background-color: #fee2e2; color: #ef4444; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">Cenário 1 (Déficit)</span>
+                                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">COD: 610836948</span>
+                                </div>
+                                <h4 style="font-weight: 700; margin-bottom: 5px; color: var(--text-dark); font-size: 0.95rem; line-height: 1.3;">Rua Cap. Salustiano de Vargas 268</h4>
+                                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 15px;">MDU de pequeno porte com apenas 1 caixa instalada.</p>
+                                
+                                <div class="table-responsive" style="margin-bottom: 15px;">
+                                    <table style="font-size: 0.75rem; width: 100%; border-collapse: collapse; text-align: left;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid var(--border); background-color: #f8fafc;">
+                                                <th style="padding: 6px;">Item LPU</th>
+                                                <th style="padding: 6px; text-align: center;">Qtd</th>
+                                                <th style="padding: 6px; text-align: right;">Unit.</th>
+                                                <th style="padding: 6px; text-align: right;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Vistoria (1.01)</td>
+                                                <td style="padding: 6px; text-align: center;">1</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 138,70</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 138,70</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Fusões (1.05)</td>
+                                                <td style="padding: 6px; text-align: center;">2</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 34,08</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 68,16</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Cabo Drop (1.07)</td>
+                                                <td style="padding: 6px; text-align: center;">51m</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 5,38</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 274,38</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid var(--border);">
+                                                <td style="padding: 6px;">NAP MDU (1.08)</td>
+                                                <td style="padding: 6px; text-align: center;">1</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 54,80</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 54,80</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.78rem; border: 1px solid var(--border); line-height: 1.5;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Caixas Instaladas:</span> <strong>1 MDU / NAP</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faturamento Claro (Bruto):</span> <span>R$ 530,66</span></div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px dashed var(--border); padding-bottom:4px;"><span>Receita Líquida JLE (-20%):</span> <strong style="color: var(--primary);">R$ 424,53</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-top:4px; margin-bottom:4px;"><span>Custo Técnico (Cenário 1):</span> <strong style="color: var(--primary);">R$ 551,20</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-top:6px; font-weight:700; color:var(--danger); border-top:1px solid var(--border); padding-top:6px;"><span>Prejuízo JLE:</span> <span>-R$ 126,67 (-29,83%)</span></div>
+                            
+                            <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.78rem; border: 1px solid var(--border); line-height: 1.5; margin-top: auto;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faturamento Claro (Bruto):</span> <span>R$ 536,04</span></div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px dashed var(--border); padding-bottom:4px;"><span>Receita Líquida (-20% Imposto):</span> <strong style="color: var(--primary);">R$ 428,83</strong></div>
+                                <div style="display:flex; justify-content:space-between; margin-top:4px; margin-bottom:4px;"><span>Repasse Técnico (Cenário 1):</span> <strong style="color: var(--primary);">R$ 551,20</strong></div>
+                                <div style="display:flex; justify-content:space-between; margin-top:6px; font-weight:700; color:var(--danger); border-top:1px solid var(--border); padding-top:6px;"><span>Margem Líquida JLE:</span> <span>-R$ 122,37 (-28,54%)</span></div>
                             </div>
                         </div>
                         
-                        <!-- Exemplo 2 -->
-                        <div style="background-color: #ffffff; border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Exemplo 2: Cenário 2 (Lucrativo) -->
+                        <div style="background-color: #ffffff; border-radius: 12px; padding: 22px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <span style="font-size: 10px; font-weight: 700; background-color: #fefbeb; color: #d97706; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Gargalo de Múltiplos Blocos</span>
-                                <h4 style="font-weight: 700; margin-top: 10px; margin-bottom: 8px; color: var(--text-dark); font-size: 0.95rem;">2. Condomínio Múltiplos Blocos</h4>
-                                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 15px;">Caso real da Rua República 2708. Pagamento por blocos físicos vs. faturamento único Claro com teto.</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <span style="font-size: 10px; font-weight: 700; background-color: #ecfdf5; color: #10b981; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">Cenário 2 (Margem Ok)</span>
+                                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">COD: 610586565</span>
+                                </div>
+                                <h4 style="font-weight: 700; margin-bottom: 5px; color: var(--text-dark); font-size: 0.95rem; line-height: 1.3;">Rua Marques do Pombal 917</h4>
+                                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 15px;">MDU de médio porte com 3 caixas instaladas.</p>
+                                
+                                <div class="table-responsive" style="margin-bottom: 15px;">
+                                    <table style="font-size: 0.75rem; width: 100%; border-collapse: collapse; text-align: left;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid var(--border); background-color: #f8fafc;">
+                                                <th style="padding: 6px;">Item LPU</th>
+                                                <th style="padding: 6px; text-align: center;">Qtd</th>
+                                                <th style="padding: 6px; text-align: right;">Unit.</th>
+                                                <th style="padding: 6px; text-align: right;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Vistoria (1.01)</td>
+                                                <td style="padding: 6px; text-align: center;">1</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 138,70</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 138,70</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Conector. (1.04)</td>
+                                                <td style="padding: 6px; text-align: center;">4</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 34,08</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 136,32</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Fusões (1.05)</td>
+                                                <td style="padding: 6px; text-align: center;">6</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 34,08</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 204,48</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Cabo Drop (1.07)</td>
+                                                <td style="padding: 6px; text-align: center;">79m</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 5,38</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 425,02</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid var(--border);">
+                                                <td style="padding: 6px;">NAP MDU (1.08)</td>
+                                                <td style="padding: 6px; text-align: center;">3</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 54,80</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 164,40</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.78rem; border: 1px solid var(--border); line-height: 1.5;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Caixas (4 blocos):</span> <strong>12 MDUs / NAPs</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faturamento Claro (Bruto):</span> <span>R$ 2.024,00</span></div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px dashed var(--border); padding-bottom:4px;"><span>Receita Líquida JLE (-20%):</span> <strong style="color: var(--primary);">R$ 1.619,20</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-top:4px; margin-bottom:4px;"><span>Custo (1 Cen. 3 + 4 Adic):</span> <strong style="color: var(--primary);">R$ 2.692,40</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-top:6px; font-weight:700; color:var(--danger); border-top:1px solid var(--border); padding-top:6px;"><span>Prejuízo JLE:</span> <span>-R$ 1.073,20 (-66,28%)</span></div>
+                            
+                            <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.78rem; border: 1px solid var(--border); line-height: 1.5; margin-top: auto;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faturamento Claro (Bruto):</span> <span>R$ 1.068,92</span></div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px dashed var(--border); padding-bottom:4px;"><span>Receita Líquida (-20% Imposto):</span> <strong style="color: var(--primary);">R$ 855,14</strong></div>
+                                <div style="display:flex; justify-content:space-between; margin-top:4px; margin-bottom:4px;"><span>Repasse Técnico (Cenário 2):</span> <strong style="color: var(--primary);">R$ 720,80</strong></div>
+                                <div style="display:flex; justify-content:space-between; margin-top:6px; font-weight:700; color:var(--success); border-top:1px solid var(--border); padding-top:6px;"><span>Margem Líquida JLE:</span> <span>+R$ 134,34 (+15,71%)</span></div>
                             </div>
                         </div>
                         
-                        <!-- Exemplo 3 -->
-                        <div style="background-color: #ffffff; border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Exemplo 3: Cenário 3 (Lucrativo) -->
+                        <div style="background-color: #ffffff; border-radius: 12px; padding: 22px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <span style="font-size: 10px; font-weight: 700; background-color: #ecfdf5; color: #10b981; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Margem Saudável</span>
-                                <h4 style="font-weight: 700; margin-top: 10px; margin-bottom: 8px; color: var(--text-dark); font-size: 0.95rem;">3. Prédio Médio (3 a 5 Caixas)</h4>
-                                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 15px;">A volumetria de itens faturados na LPU Claro cobre com segurança a tabela fixa de repasse do técnico.</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <span style="font-size: 10px; font-weight: 700; background-color: #ecfdf5; color: #10b981; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">Cenário 3 (Margem Boa)</span>
+                                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">COD: 610501956</span>
+                                </div>
+                                <h4 style="font-weight: 700; margin-bottom: 5px; color: var(--text-dark); font-size: 0.95rem; line-height: 1.3;">Rua Golda Meir 105</h4>
+                                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 15px;">MDU de grande porte com 6 caixas instaladas.</p>
+                                
+                                <div class="table-responsive" style="margin-bottom: 15px;">
+                                    <table style="font-size: 0.75rem; width: 100%; border-collapse: collapse; text-align: left;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid var(--border); background-color: #f8fafc;">
+                                                <th style="padding: 6px;">Item LPU</th>
+                                                <th style="padding: 6px; text-align: center;">Qtd</th>
+                                                <th style="padding: 6px; text-align: right;">Unit.</th>
+                                                <th style="padding: 6px; text-align: right;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Vistoria (1.01)</td>
+                                                <td style="padding: 6px; text-align: center;">1</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 138,70</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 138,70</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Conector. (1.04)</td>
+                                                <td style="padding: 6px; text-align: center;">4</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 34,08</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 136,32</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Fusões (1.05)</td>
+                                                <td style="padding: 6px; text-align: center;">10</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 34,08</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 340,80</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px dashed var(--border);">
+                                                <td style="padding: 6px;">Cabo Drop (1.07)</td>
+                                                <td style="padding: 6px; text-align: center;">130m</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 5,38</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 699,40</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid var(--border);">
+                                                <td style="padding: 6px;">NAP MDU (1.08)</td>
+                                                <td style="padding: 6px; text-align: center;">6</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 54,80</td>
+                                                <td style="padding: 6px; text-align: right;">R$ 328,80</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.78rem; border: 1px solid var(--border); line-height: 1.5;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Caixas Instaladas:</span> <strong>3 MDUs / NAPs</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faturamento Claro (Bruto):</span> <span>R$ 1.203,42</span></div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px dashed var(--border); padding-bottom:4px;"><span>Receita Líquida JLE (-20%):</span> <strong style="color: var(--primary);">R$ 962,74</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-top:4px; margin-bottom:4px;"><span>Custo Técnico (Cenário 2):</span> <strong style="color: var(--primary);">R$ 720,80</strong></div>
-                                <div style="display:flex; justify-content:space-between; margin-top:6px; font-weight:700; color:var(--success); border-top:1px solid var(--border); padding-top:6px;"><span>Lucro JLE:</span> <span>+R$ 241,94 (+25,13%)</span></div>
+                            
+                            <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.78rem; border: 1px solid var(--border); line-height: 1.5; margin-top: auto;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faturamento Claro (Bruto):</span> <span>R$ 1.644,02</span></div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px dashed var(--border); padding-bottom:4px;"><span>Receita Líquida (-20% Imposto):</span> <strong style="color: var(--primary);">R$ 1.315,22</strong></div>
+                                <div style="display:flex; justify-content:space-between; margin-top:4px; margin-bottom:4px;"><span>Repasse Técnico (Cenário 3):</span> <strong style="color: var(--primary);">R$ 996,40</strong></div>
+                                <div style="display:flex; justify-content:space-between; margin-top:6px; font-weight:700; color:var(--success); border-top:1px solid var(--border); padding-top:6px;"><span>Margem Líquida JLE:</span> <span>+R$ 318,82 (+24,24%)</span></div>
                             </div>
                         </div>
                     </div>
