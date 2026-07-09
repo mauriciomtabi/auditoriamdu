@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso Restrito - Relatório MDU Claro</title>
+    <title>Relatório Auditoria MDU</title>
+    <!-- OpenGraph Meta Tags for Link Sharing Preview -->
+    <meta property="og:title" content="Relatório Auditoria MDU">
+    <meta property="og:description" content="Auditoria de Faturamento e Custos MDU">
+    <meta property="og:image" content="jle_logo.png">
+    <meta name="description" content="Relatório Auditoria MDU">
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -330,6 +335,13 @@
             margin-top: 10px;
         }
 
+        @media (min-width: 1024px) {
+            .portal-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
         .portal-card {
             background-color: #ffffff;
             border-radius: 20px;
@@ -342,6 +354,39 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 250px;
+        }
+
+        @media (min-width: 1024px) {
+            .portal-card {
+                min-height: 185px;
+                padding: 16px 20px;
+                border-radius: 16px;
+            }
+            .portal-card-icon {
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 12px !important;
+                margin-bottom: 12px !important;
+            }
+            .portal-card-icon svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+            .portal-card h3 {
+                font-size: 1.05rem !important;
+                margin-bottom: 6px !important;
+            }
+            .portal-card p {
+                font-size: 0.8rem !important;
+                line-height: 1.4 !important;
+            }
+            .portal-card-footer {
+                margin-top: 12px !important;
+                font-size: 0.78rem !important;
+            }
+            .portal-card:last-child {
+                grid-column: span 2;
+            }
         }
 
         .portal-card:hover {
@@ -890,7 +935,7 @@
                         <div class="portal-card-header">
                             <div class="portal-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
                             <h3>Alertas & Pendências</h3>
-                            <p>Faturamentos reprimidos de R$ 129k, passivos pendentes de R$ 46k e recuperação de R$ 551,20 da GEM Telecom.</p>
+                            <p>Faturamentos reprimidos de R$ 129k, passivos de repasses de R$ 26k e recuperação de R$ 551,20 da GEM Telecom.</p>
                         </div>
                         <div class="portal-card-footer">Visualizar Alertas ➔</div>
                     </div>
@@ -949,7 +994,7 @@
                     </div>
                     <div class="kpi-card warning">
                         <div class="kpi-title">Passivos Pendentes</div>
-                        <div class="kpi-value">40</div>
+                        <div class="kpi-value">41</div>
                         <div class="kpi-meta">Endereços finalizados sem repasse</div>
                     </div>
                 </div>
@@ -1112,7 +1157,7 @@
                                 </tr>
                                 <tr>
                                     <td><span class="badge badge-danger">Não Pago</span></td>
-                                    <td>Sem registro de pagamentos (40 pendentes, 1 pago anteriormente em 2025)</td>
+                                    <td>Sem registro de pagamentos (41 endereços)</td>
                                     <td>41</td>
                                     <td>11,72%</td>
                                 </tr>
@@ -1496,8 +1541,8 @@
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--warning); margin-bottom: 12px;">2. Passivo de Repasse Pendente a Técnicos (40 Endereços - R$ 46.494,88)</h3>
-                        <p>Temos <strong>40 endereços</strong> faturados Claro sem registro de pagamento de mão de obra nos relatórios consolidados. Estes técnicos constam como executores, indicando um passivo pendente de repasse de R$ 46.494,88.</p>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--warning); margin-bottom: 12px;">2. Passivo de Repasse Pendente a Técnicos (41 Endereços - R$ 26.460,00)</h3>
+                        <p>Temos <strong>41 endereços</strong> faturados Claro sem registro de pagamento de mão de obra nos relatórios consolidados. Estes técnicos constam como executores, indicando um passivo pendente de repasse de R$ 26.460,00 (correspondente a um faturamento Claro de R$ 48.098,88).</p>
                     </div>
 
                     <div>
