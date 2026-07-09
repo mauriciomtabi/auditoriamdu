@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Executivo de Auditoria - Projeto MDU Claro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3c72;
+            --primary-light: #2a5298;
+            --accent: #6366f1;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --warning: #f59e0b;
+            --warning-light: #fefbeb;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* Top Header Banner */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 30px 24px;
+            position: relative;
+            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .logo-container {
+            background-color: var(--white);
+            padding: 8px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            width: 110px;
+            height: 110px;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background-color: var(--white);
+            border-radius: 12px;
+            margin: 24px 0;
+            padding: 6px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background-color: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            color: var(--white);
+            background-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* KPI Dashboard Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .kpi-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .kpi-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .kpi-card.highlight {
+            border-left: 5px solid var(--accent);
+        }
+
+        .kpi-card.success {
+            border-left: 5px solid var(--success);
+        }
+
+        .kpi-card.danger {
+            border-left: 5px solid var(--danger);
+        }
+
+        /* Sections and Card Layout */
+        .card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        p.lead {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* Custom Tables */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            color: #334155;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-success {
+            background-color: var(--success-light);
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .badge-danger {
+            background-color: var(--danger-light);
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .badge-warning {
+            background-color: var(--warning-light);
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .badge-primary {
+            background-color: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Lists and Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .list-unstyled {
+            list-style: none;
+        }
+
+        .list-item-checklist {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+        }
+
+        .list-item-checklist::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--success-light);
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Files Section */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .file-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .file-box:hover {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            background-color: #ffedd5;
+            color: #d97706;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .file-box:nth-child(even) .file-icon {
+            background-color: #dbeafe;
+            color: #2563eb;
+        }
+
+        .file-info h4 {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .file-info p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Custom Alert box */
+        .alert-box {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .alert-box.warning {
+            background-color: var(--warning-light);
+            border: 1px solid #fde68a;
+            color: #78350f;
+        }
+
+        .alert-box.info {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            color: #0c4a6e;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .alert-desc {
+            font-size: 0.88rem;
+            opacity: 0.95;
+        }
+
+        /* Operational Timeline Elements */
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 20px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .timeline-step {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .timeline-step::before {
+            content: "";
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 11px;
+            height: 11px;
+            background-color: var(--accent);
+            border: 2px solid var(--white);
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <div class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Relatório Executivo MDU Claro</h1>
+                <p>Auditoria Geral de Faturamento (21/05 a 20/06) & Custos de Terceiros (Março, Abril, Maio e Junho)</p>
+            </div>
+            <div class="logo-container">
+                <img src="jle_logo.png" alt="Logo JLE Telecom">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">Painel Consolidado</button>
+            <button class="tab-btn" onclick="switchTab('dynamics')">Dinâmica Operacional</button>
+            <button class="tab-btn" onclick="switchTab('matching')">Diferença de Datas (Fluxo)</button>
+            <button class="tab-btn" onclick="switchTab('payments')">Pagamentos a Terceiros</button>
+            <button class="tab-btn" onclick="switchTab('margins')">Prejuízo por Endereço</button>
+            <button class="tab-btn" onclick="switchTab('alerts')">Alertas & Pendências</button>
+            <button class="tab-btn" onclick="switchTab('strategy')">Estratégia Claro</button>
+        </div>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="dashboard" class="tab-content active">
+            <div class="kpi-grid">
+                <div class="kpi-card highlight">
+                    <div class="kpi-title">Faturamento Bruto</div>
+                    <div class="kpi-value">R$ 352.548,91</div>
+                    <div class="kpi-meta">Cobrado da Claro (21/05 a 20/06)</div>
+                </div>
+                <div class="kpi-card highlight">
+                    <div class="kpi-title">Receita Líquida</div>
+                    <div class="kpi-value">R$ 282.039,13</div>
+                    <div class="kpi-meta">Deduzidos 20% de impostos</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-title">Custo Terceiros Alocado</div>
+                    <div class="kpi-value">R$ 186.326,80</div>
+                    <div class="kpi-meta">Mão de obra para 309 endereços</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-title">Margem Líquida Real</div>
+                    <div class="kpi-value">32,75%</div>
+                    <div class="kpi-meta">Lucro real de R$ 90.719,69</div>
+                </div>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Total de Endereços</div>
+                    <div class="kpi-value">350</div>
+                    <div class="kpi-meta">Edifícios faturados Claro</div>
+                </div>
+                <div class="kpi-card danger">
+                    <div class="kpi-title">Margens Negativas</div>
+                    <div class="kpi-value">80</div>
+                    <div class="kpi-meta">22,86% dos endereços no vermelho</div>
+                </div>
+                <div class="kpi-card warning">
+                    <div class="kpi-title">Receita Reprimida</div>
+                    <div class="kpi-value">R$ 129.956,00</div>
+                    <div class="kpi-meta">224 endereços pagos e não cobrados</div>
+                </div>
+                <div class="kpi-card warning">
+                    <div class="kpi-title">Passivos Pendentes</div>
+                    <div class="kpi-value">40</div>
+                    <div class="kpi-meta">Endereços finalizados sem repasse</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Resumo Executivo para a Diretoria</h2>
+                <p class="lead">A auditoria completa das medições do Projeto MDU Claro revela que a saúde financeira do projeto é forte, mas com gargalos estruturais e de controle de fluxo de caixa que exigem atenção imediata da diretoria.</p>
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div>
+                        <h4 style="font-weight: 700; margin-bottom: 10px; color: var(--primary);">Principais Oportunidades:</h4>
+                        <ul class="list-unstyled">
+                            <li class="list-item-checklist"><strong>Margem Operacional Segura:</strong> O projeto gera uma margem de contribuição líquida real de 32,75% (R$ 90.719,69) após impostos de 20% e inclusão da folha de Março.</li>
+                            <li class="list-item-checklist"><strong>Caixa a Recuperar:</strong> JLE pagou terceiros por 224 endereços em Junho que ainda não foram faturados na Claro (R$ 129.956,00). O faturamento destes itens trará retorno financeiro imediato.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight: 700; margin-bottom: 10px; color: var(--danger);">Pontos de Atenção Crítica:</h4>
+                        <ul class="list-unstyled">
+                            <li class="list-item-checklist" style="color: #475569;"><strong>Prédios Pequenos Deficitários:</strong> O modelo de pagamento fixo por caixa (Cenários) comparado com o faturamento Claro variável por LPU gera prejuízo em 22,86% das obras.</li>
+                            <li class="list-item-checklist" style="color: #475569;"><strong>Duplicidade Detectada:</strong> Identificado um pagamento duplicado indevido de R$ 551,20 para a GEM Telecom.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DINÂMICA OPERACIONAL (NEW TAB) -->
+        <div id="dynamics" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <h2>Particularidades de Pagamento (Custos JLE)</h2>
+                    <p style="margin-bottom: 15px;">Os repasses a técnicos terceiros seguem uma sistemática baseada na **quantidade física de caixas** instaladas e finalizadas, centralizada pela colaboradora Franciele:</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-step">
+                            <div class="timeline-date">Até o dia 20</div>
+                            <div class="timeline-title">Envio da Produção pelas Equipes</div>
+                            <div class="timeline-desc">Os técnicos terceirizados enviam suas medições mensais baseadas em planilhas contendo a relação de endereços atendidos.</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="timeline-date">Até o dia 25</div>
+                            <div class="timeline-title">Fechamento e Provisionamento</div>
+                            <div class="timeline-desc">Franciele valida as produções das equipes e envia os fechamentos consolidados para o provisionamento financeiro.</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="timeline-date">Dia 10 do Mês Seguinte</div>
+                            <div class="timeline-title">Liquidação dos Repasses</div>
+                            <div class="timeline-desc">O setor financeiro efetua os pagamentos em conta bancária das equipes de subcontratados.</div>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #fafaf9; border-radius: 12px; padding: 18px; border: 1px solid var(--border); margin-top: 15px;">
+                        <h4 style="font-weight: 700; margin-bottom: 8px; color: var(--primary);">Tabela de Preço por Faixa de Caixas:</h4>
+                        <ul style="margin-left: 20px; font-size: 0.9rem;">
+                            <li style="margin-bottom: 4px;"><strong>Cenário 1 (Até 2 Caixas):</strong> R$ 551,20 por endereço</li>
+                            <li style="margin-bottom: 4px;"><strong>Cenário 2 (De 3 a 5 Caixas):</strong> R$ 720,80 por endereço</li>
+                            <li style="margin-bottom: 4px;"><strong>Cenário 3 (De 6 a 8 Caixas):</strong> R$ 996,40 por endereço</li>
+                            <li style="margin-bottom: 4px;"><strong>Bloco Adicional (A partir da 9ª Caixa):</strong> +R$ 424,00 por caixa</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Particularidades de Faturamento (Receitas JLE)</h2>
+                    <p style="margin-bottom: 15px;">A cobrança dos serviços executados é baseada no faturamento da **LPU (Lista de Preços Unitários)** variável por item executado (ex: fiação, fusão), centralizada pela colaboradora Cristiane:</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-step">
+                            <div class="timeline-date">A cada 10 dias / Mensal</div>
+                            <div class="timeline-title">Soma de LPU por Execução</div>
+                            <div class="timeline-desc">Os itens são consolidados: em Porto Alegre (POA) a cada 10 dias (3x ao mês) e em Novo Hamburgo (NHO) de forma mensal (dia 01 ao dia 30).</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="timeline-date">Até o dia 22</div>
+                            <div class="timeline-title">Envio do Ciclo de Faturamento</div>
+                            <div class="timeline-desc">A Cristiane envia o consolidado das medições abrangendo o intervalo do <strong>dia 21 do mês passado ao dia 20 do mês atual</strong> para aprovação da Claro.</div>
+                        </div>
+                        <div class="timeline-step">
+                            <div class="timeline-date">WF Claro & Fluxo</div>
+                            <div class="timeline-title">Geração de OS e Recebimento</div>
+                            <div class="timeline-desc">Após validação e aprovação do faturamento pela Claro, são gerados os números de OS no sistema WF da Claro. O recebimento ocorre todo <strong>dia 30 do mesmo mês</strong>.</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-box info" style="margin-top: 15px; padding: 15px;">
+                        <div class="alert-desc" style="font-size: 0.85rem;">
+                            <strong>Resumo da Incompatibilidade:</strong> A JLE cobra a Claro com base em itens de serviços detalhados e variáveis por LPU, mas paga as equipes com base em valores fixos por prédio instalados. Isso gera riscos financeiros em edifícios de pequeno porte.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: MATCHING & CAIXA -->
+        <div id="matching" class="tab-content">
+            <div class="card">
+                <h2>Defasagem entre Datas de Pagamento e Faturamento</h2>
+                <p>Nossa auditoria realizou a conciliação individual de endereços cruzando o faturamento Claro do ciclo (21/05 a 20/06) com os repasses aos técnicos de Março, Abril, Maio e Junho. O resultado detalhado aponta uma <strong>importante defasagem de fluxo de caixa</strong>:</p>
+                
+                <div class="alert-box info" style="margin: 20px 0;">
+                    <div>
+                        <div class="alert-title">Financiamento Operacional: JLE Adianta os Recursos</div>
+                        <div class="alert-desc">A JLE executa e paga os técnicos terceiros em média 30 a 90 dias antes de emitir o faturamento para a aprovação da Claro. Dos 350 edifícios cobrados da Claro em Junho, a grande maioria já havia sido paga de Março a Maio.</div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mês de Pagamento do Técnico</th>
+                                <th>Status da Ocupação no Faturamento</th>
+                                <th>Quantidade de Endereços</th>
+                                <th>Representatividade (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge badge-primary">Março</span></td>
+                                <td>Pago em Março, Faturado Claro em Junho</td>
+                                <td>27</td>
+                                <td>7,71%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-primary">Abril</span></td>
+                                <td>Pago em Abril, Faturado Claro em Junho</td>
+                                <td>108</td>
+                                <td>30,86%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-primary">Maio</span></td>
+                                <td>Pago em Maio, Faturado Claro em Junho</td>
+                                <td>124</td>
+                                <td>35,43%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-success">Junho</span></td>
+                                <td>Pago em Junho, Faturado Claro em Junho</td>
+                                <td>50</td>
+                                <td>14,28%</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-danger">Não Pago</span></td>
+                                <td>Sem registro de pagamentos (40 pendentes, 1 pago anteriormente em 2025)</td>
+                                <td>41</td>
+                                <td>11,72%</td>
+                            </tr>
+                            <tr style="font-weight: bold; background-color: #f1f5f9;">
+                                <td>TOTAL CONSOLIDADO</td>
+                                <td>350 endereços faturados à Claro</td>
+                                <td>350</td>
+                                <td>100,00%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: PAYMENTS -->
+        <div id="payments" class="tab-content">
+            <div class="card">
+                <h2>Histórico de Pagamento de Terceiros (Últimos 4 Meses)</h2>
+                <p>Abaixo está o detalhamento consolidado dos pagamentos realizados a cada uma das equipes de técnicos terceirizados nos meses de <strong>Março, Abril, Maio e Junho</strong>, com base nos fechamentos mensais de produção:</p>
+                
+                <div class="table-responsive" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Técnico / Equipe</th>
+                                <th>Repasse Março (R$)</th>
+                                <th>Repasse Abril (R$)</th>
+                                <th>Repasse Maio (R$)</th>
+                                <th>Repasse Junho (R$)</th>
+                                <th>Total Acumulado (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DAVID SALOMÃO</strong></td>
+                                <td>33.326,40</td>
+                                <td>39.029,20</td>
+                                <td>37.121,20</td>
+                                <td>42.951,20</td>
+                                <td style="font-weight: 600;">152.428,00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ABRAÃO RODRIGUES</strong></td>
+                                <td>19.270,80</td>
+                                <td>21.751,20</td>
+                                <td>33.262,80</td>
+                                <td>21.518,00</td>
+                                <td style="font-weight: 600;">95.802,80</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MARCOS VINICIUS</strong></td>
+                                <td>25.164,40</td>
+                                <td>26.288,00</td>
+                                <td>23.171,60</td>
+                                <td>19.525,20</td>
+                                <td style="font-weight: 600;">94.149,20</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PAULO RIBACZKI</strong></td>
+                                <td>35.446,40</td>
+                                <td>27.157,20</td>
+                                <td>20.458,00</td>
+                                <td>12.720,00</td>
+                                <td style="font-weight: 600;">95.781,60</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GUILHERME ALBRECHT</strong></td>
+                                <td>13.843,60</td>
+                                <td>22.578,00</td>
+                                <td>20.182,40</td>
+                                <td>19.334,40</td>
+                                <td style="font-weight: 600;">75.938,40</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GEM TELECOM</strong></td>
+                                <td>17.998,80</td>
+                                <td>14.288,80</td>
+                                <td>17.935,20</td>
+                                <td>7.886,40</td>
+                                <td style="font-weight: 600;">58.109,20</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MURILO DIDIO</strong></td>
+                                <td>10.515,20</td>
+                                <td>11.575,20</td>
+                                <td>14.310,00</td>
+                                <td>4.642,80</td>
+                                <td style="font-weight: 600;">41.043,20</td>
+                            </tr>
+                            <tr>
+                                <td><strong>INOIR SANTOS</strong></td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td>20.309,60</td>
+                                <td>13.419,60</td>
+                                <td style="font-weight: 600;">33.729,20</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VINICIUS DE BRITO</strong></td>
+                                <td>10.430,40</td>
+                                <td>15.009,60</td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td style="font-weight: 600;">25.440,00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GABRIEL DE BRITO</strong></td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td>15.900,00</td>
+                                <td>10.684,80</td>
+                                <td style="font-weight: 600;">26.584,80</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PAULO KEIBER</strong></td>
+                                <td>7.017,20</td>
+                                <td>7.716,80</td>
+                                <td>5.300,00</td>
+                                <td>5.851,20</td>
+                                <td style="font-weight: 600;">25.885,20</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LUIS HENRIQUE RIBACZKI / KMR</strong></td>
+                                <td>5.384,80</td>
+                                <td>19.673,60</td>
+                                <td>551,20</td>
+                                <td>0,00</td>
+                                <td style="font-weight: 600;">25.609,60</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MARCOS MARTINS</strong></td>
+                                <td>10.430,40</td>
+                                <td>6.063,20</td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td style="font-weight: 600;">16.493,60</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PETERSON MACHADO</strong></td>
+                                <td>12.232,40</td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td style="font-weight: 600;">12.232,40</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DERIK PEREIRA</strong></td>
+                                <td>5.278,80</td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td>0,00</td>
+                                <td style="font-weight: 600;">5.278,80</td>
+                            </tr>
+                            <tr style="font-weight: bold; background-color: #f1f5f9;">
+                                <td>TOTAL DE REPASSES</td>
+                                <td>206.339,60</td>
+                                <td>211.130,80</td>
+                                <td>208.502,00</td>
+                                <td>158.533,60</td>
+                                <td>784.506,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: MARGINS -->
+        <div id="margins" class="tab-content">
+            <div class="card">
+                <h2>Margens de Lucro e Prejuízo por Edifício</h2>
+                <p>Identificamos que em <strong>80 dos 350 endereços faturados (22,86%)</strong>, a JLE operou com margem líquida negativa. A perda financeira agregada nestes endereços totalizou <strong>R$ -34.808,66</strong> (e perda real direta de caixa de R$ 9.220,66).</p>
+                
+                <div class="alert-box warning" style="margin: 20px 0;">
+                    <div>
+                        <div class="alert-title">Causa Principal: LPU Claro vs. Tabela Fixo Terceiros</div>
+                        <div class="alert-desc">A Claro paga a JLE por unidades detalhadas instaladas (LPU variável), mas a JLE remunera o técnico parceiro com valor fixo por faixa de caixas (Cenário 1 = R$ 551,20 para 1 ou 2 caixas). Prédios de pequeno porte que geram faturamento Claro bruto menor que <strong>R$ 689,00</strong> geram prejuízo líquido automático após impostos.</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div>
+                        <h4 style="font-weight: 700; margin-bottom: 10px; color: var(--danger);">Top 5 Endereços com Maior Prejuízo Unitário:</h4>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Endereço</th>
+                                        <th>Receita Líquida JLE</th>
+                                        <th>Pago ao Técnico</th>
+                                        <th>Prejuízo Líquido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>R Republica 2708 Bl A,B,C,E</td>
+                                        <td>R$ 1.619,20</td>
+                                        <td>R$ 2.692,40 *</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 1.073,20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>R Rubens Rosa Guedes 220 Bl A</td>
+                                        <td>R$ 209,33</td>
+                                        <td>R$ 551,20</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 341,87</td>
+                                    </tr>
+                                    <tr>
+                                        <td>R Eduardo da S Prado 62 Bl A</td>
+                                        <td>R$ 209,33</td>
+                                        <td>R$ 551,20</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 341,87</td>
+                                    </tr>
+                                    <tr>
+                                        <td>R Rubens Rosa Guedes 250 Bl B</td>
+                                        <td>R$ 209,33</td>
+                                        <td>R$ 551,20</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 341,87</td>
+                                    </tr>
+                                    <tr>
+                                        <td>R Eduardo da S Prado 62 Bl C</td>
+                                        <td>R$ 209,33</td>
+                                        <td>R$ 424,00</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 214,67</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
+                            * <strong>Ajuste Rua República 2708 (Blocos A, B, C, E):</strong> Este valor consta na planilha de Maio do técnico David Salomão. Ele foi pago por 1 Cenário 3 (R$ 996,40) + 4 Blocos Adicionais (4 x R$ 424,00 = R$ 1.696,00), totalizando R$ 2.692,40. Isso ocorreu pois foram instaladas 12 caixas no condomínio (3 em cada bloco). Porém, a JLE faturou Claro R$ 2.024,00 brutos por essa obra, gerando prejuízo líquido após impostos.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 style="font-weight: 700; margin-bottom: 10px; color: var(--primary);">Prédios Negativos por Técnico:</h4>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Técnico</th>
+                                        <th>Quantidade de Prédios</th>
+                                        <th>Prejuízo Acumulado (R$)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>David Salomão</td>
+                                        <td>40</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 5.050,02</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Guilherme Albrecht</td>
+                                        <td>11</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 1.197,41</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inoir Santos</td>
+                                        <td>3</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 771,22</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Paulo Ribaczki</td>
+                                        <td>7</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 533,07</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Marcos Vinicius</td>
+                                        <td>4</td>
+                                        <td style="color: var(--danger); font-weight: 600;">-R$ 258,90</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: ALERTS & UNBILLED -->
+        <div id="alerts" class="tab-content">
+            <div class="card">
+                <h2>Rastreamento de Inconsistências de Auditoria e Caixa</h2>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--warning); margin-bottom: 12px;">1. Faturamento Reprimido: Custos Pagos Sem Cobrança Claro (R$ 129.956,00)</h3>
+                    <p>A JLE pagou subcontratados terceiros por <strong>224 endereços</strong> no fechamento financeiro de Junho, mas estes endereços não constam no faturamento Claro emitido no mesmo período (21/05 a 20/06). Isso indica receita reprimida que precisa ser submetida no próximo lote faturamento.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--warning); margin-bottom: 12px;">2. Passivo de Repasse Pendente a Técnicos (40 Endereços - R$ 46.494,88)</h3>
+                    <p>Após cruzamento com os relatórios de Março, restam apenas <strong>40 endereços</strong> faturados Claro sem registro de pagamento em nenhum dos 4 meses (anteriormente eram 67). Estes técnicos constam como executores, indicando um passivo pendente de cobrança ou faturamento de mão de obra de R$ 46.494,88.</p>
+                </div>
+
+                <div>
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--danger); margin-bottom: 12px;">3. Pagamento Duplicado Detectado (R$ 551,20)</h3>
+                    <p>Identificamos um pagamento em duplicidade indevido para o técnico <strong>GEM TELECOM</strong>:
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Endereço:</strong> Rua Demetrio Ribeiro 445 (Porto Alegre)</li>
+                        <li><strong>Pagamento 1:</strong> R$ 551,20 (Mês de Abril)</li>
+                        <li><strong>Pagamento 2:</strong> R$ 551,20 (Mês de Maio - Lançamento repetido do mesmo endereço)</li>
+                        <li><strong>Ação Corretiva:</strong> Descontar <strong>R$ 551,20</strong> na próxima fatura de repasse da GEM Telecom.</li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7: STRATEGY -->
+        <div id="strategy" class="tab-content">
+            <div class="card">
+                <h2>Estratégia para a Renegociação de Contrato com a Claro</h2>
+                <p class="lead">Use os dados reais da auditoria como poder de barganha na reunião de renegociação amanhã.</p>
+                
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div style="background-color: #fafaf9; border-radius: 12px; padding: 24px; border: 1px solid var(--border);">
+                        <h4 style="font-weight: 700; color: var(--primary); margin-bottom: 15px;">Argumentos Principais para a Claro:</h4>
+                        <ul class="list-unstyled">
+                            <li class="list-item-checklist" style="margin-bottom: 15px;"><strong>Faturamento Mínimo por MDU:</strong> Explicar que prédios pequenos exigem o mesmo esforço de vistoria, síndico e mobilização de equipe que prédios grandes. Propor faturamento mínimo de <strong>R$ 750,00 brutos por endereço</strong> ou uma <strong>Taxa de Mobilização Fixa de R$ 350,00</strong> por MDU.</li>
+                            <li class="list-item-checklist" style="margin-bottom: 15px;"><strong>Defasagem da LPU:</strong> Mostrar que as taxas de LPU atuais espremem a margem líquida real de produção a apenas <strong>32,75%</strong>, o que é insustentável a longo prazo, forçando a necessidade de reajuste linear de 15% nas LPUs de cabos e fusão.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background-color: #fafaf9; border-radius: 12px; padding: 24px; border: 1px solid var(--border);">
+                        <h4 style="font-weight: 700; color: var(--accent); margin-bottom: 15px;">Plano B (Correções Internas da JLE):</h4>
+                        <ul class="list-unstyled">
+                            <li class="list-item-checklist" style="margin-bottom: 15px;"><strong>Substituir Preço Fixo (Cenário) por Percentual:</strong> Passar a remunerar os técnicos terceiros com um percentual da LPU faturada Claro (ex: 55% da LPU gerada no prédio) em vez de R$ 551,20 fixo. Isso transfere o risco do tamanho do prédio para a equipe e garante margem positiva para a JLE.</li>
+                            <li class="list-item-checklist" style="margin-bottom: 15px;"><strong>Filtro de Equipe Própria:</strong> Direcionar prédios muito pequenos (com receita LPU estimada abaixo de R$ 700) apenas para a equipe interna CLT da JLE, blindando o caixa do projeto contra os custos de terceiros.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Anexos e Planilhas de Auditoria (OneDrive)</h2>
+                <p style="margin-bottom: 15px;">Todos os relatórios detalhados e as planilhas estão disponíveis e salvos no seu OneDrive na pasta de auditoria:</p>
+                <div class="files-grid">
+                    <a href="Margem_Detalhada_Por_Endereco.xlsx" class="file-box">
+                        <div class="file-icon">XL</div>
+                        <div class="file-info">
+                            <h4>Margem Detalhada por Endereço</h4>
+                            <p>Todos os 350 endereços faturados e margem individual</p>
+                        </div>
+                    </a>
+                    <a href="Comparativo_Detalhado_Itens_MDU.xlsx" class="file-box">
+                        <div class="file-icon">XL</div>
+                        <div class="file-info">
+                            <h4>Comparativo Detalhado de Itens</h4>
+                            <p>Abertura de quantidades LPU vs Cenários</p>
+                        </div>
+                    </a>
+                    <a href="MDUs_Faturados_Historico_Controle.xlsx" class="file-box">
+                        <div class="file-icon">XL</div>
+                        <div class="file-info">
+                            <h4>Rastreamento de Endereços Sem Custo</h4>
+                            <p>Pesquisa histórica de datas e equipes no Controle</p>
+                        </div>
+                    </a>
+                    <a href="Enderecos_Duplicados_Pagamentos.xlsx" class="file-box">
+                        <div class="file-icon">XL</div>
+                        <div class="file-info">
+                            <h4>Auditoria de Duplicidades</h4>
+                            <p>Listagem de repetições e o caso Demetrio Ribeiro</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab content
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show current tab content and set button active
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find the button that was clicked
+            const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabId));
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
