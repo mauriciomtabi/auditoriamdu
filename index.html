@@ -266,6 +266,7 @@
             left: 50%;
             transform: translateX(-50%);
             box-sizing: border-box;
+            padding: 4px 24px;
         }
 
         @media (min-width: 1024px) {
@@ -833,6 +834,16 @@
             font-size: 0.9rem;
             color: #475569;
         }
+    
+        #search-tab {
+            width: 96vw !important;
+            max-width: 1600px !important;
+            margin: 0 auto !important;
+            position: relative !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            box-sizing: border-box !important;
+        }
     </style>
 </head>
 <body>
@@ -990,13 +1001,13 @@
                     </div>
                     <div class="kpi-card success">
                         <div class="kpi-title">Custo Terceiros</div>
-                        <div class="kpi-value">R$ 213.017,60</div>
-                        <div class="kpi-meta">R$ 186.326,80 pagos + R$ 26.690,80 a checar*</div>
+                        <div class="kpi-value">R$ 212.786,80</div>
+                        <div class="kpi-meta">R$ 186.326,80 pagos + R$ 26.460,00 a checar*</div>
                     </div>
                     <div class="kpi-card success">
                         <div class="kpi-title">Margem Líquida</div>
-                        <div class="kpi-value">23,11%</div>
-                        <div class="kpi-meta">Lucro de R$ 64.028,89 (Nominal: 32,75% / R$ 90.719,69)</div>
+                        <div class="kpi-value">22,78%</div>
+                        <div class="kpi-meta">Lucro de R$ 64.259,69 (Nominal: 32,75% / R$ 90.719,69)</div>
                     </div>
                 </div>
 
@@ -1025,7 +1036,7 @@
 
                 <div class="card">
                     <h2>Análise Realista da Margem do Projeto (Projeção Financeira)</h2>
-                    <p style="margin-bottom: 20px;">Para evitar distorções no fluxo de caixa e lucros ilusórios, apresentamos abaixo o comparativo entre a margem nominal atual (que omite os repasses pendentes) e a margem realista provisionada (considerando a quitação dos <strong>R$ 26.690,80</strong> devidos aos técnicos terceiros):</p>
+                    <p style="margin-bottom: 20px;">Para evitar distorções no fluxo de caixa e lucros ilusórios, apresentamos abaixo o comparativo entre a margem nominal atual (que omite os repasses pendentes) e a margem realista provisionada (considerando a quitação dos <strong>R$ 26.460,00</strong> devidos aos técnicos terceiros):</p>
                     
                     <div class="grid-2">
                         <div style="background-color: #f8fafc; padding: 22px; border-radius: 14px; border-left: 5px solid var(--accent); border: 1px solid var(--border); border-left-width: 5px;">
@@ -1036,8 +1047,8 @@
                         
                         <div style="background-color: #f0fdf4; padding: 22px; border-radius: 14px; border-left: 5px solid var(--success); border: 1px solid #bbf7d0; border-left-width: 5px;">
                             <h4 style="font-weight: 700; margin-bottom: 10px; color: #166534; font-size: 1.05rem;">Cenário 2: Margem Realista Provisionada (Recomendado)</h4>
-                            <div style="font-size: 2rem; font-weight: 800; color: var(--success); margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px;">23,11% <span style="font-size: 1.05rem; font-weight: 600; color: #64748b;">(R$ 64.028,89)</span></div>
-                            <p style="font-size: 0.85rem; color: #166534; line-height: 1.5;">Projeta o custo real com terceiros subindo para <strong>R$ 213.017,60</strong> (quitando os <strong>R$ 26.690,80</strong> pendentes dos 41 endereços). Esse cenário reflete a lucratividade de longo prazo da sua operação.</p>
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--success); margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px;">22,78% <span style="font-size: 1.05rem; font-weight: 600; color: #64748b;">(R$ 64.259,69)</span></div>
+                            <p style="font-size: 0.85rem; color: #166534; line-height: 1.5;">Projeta o custo real com terceiros subindo para <strong>R$ 212.786,80</strong> (quitando os <strong>R$ 26.460,00</strong> pendentes dos 41 endereços). Esse cenário reflete a lucratividade de longo prazo da sua operação.</p>
                         </div>
                     </div>
                 </div>
@@ -1785,21 +1796,21 @@
                         <table id="search-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.72rem; white-space: nowrap;">
                             <thead>
                                 <tr style="background: var(--primary); color: white; font-size: 0.69rem;">
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;">CODGED</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;">Endereço</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;">Cidade</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;" title="Vistoria (LPU 1.01)">1.01</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;" title="Cabo Rise (LPU 1.03)">1.03</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;" title="Conectorização (LPU 1.04)">1.04</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;" title="Fusões (LPU 1.05)">1.05</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;" title="Cabo Drop MDU (LPU 1.07)">1.07</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;" title="NAP MDU (LPU 1.08)">1.08</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;">Fat. Bruto</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;">Fat. Líq.</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;">Técnico</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;">Vl. Pago</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;">Margem R$</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;">Margem %</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">CODGED</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">Endereço</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">Cidade</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.01<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Vistoria</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.03<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Rise</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.04<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Conect.</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.05<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Fusões</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.07<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Drop</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.08<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">NAP</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Fat. Bruto</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Fat. Líq.</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">Técnico</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Vl. Pago</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Margem R$</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Margem %</th>
                                 </tr>
                             </thead>
                             <tbody id="search-table-body">
@@ -1830,8 +1841,8 @@
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--warning); margin-bottom: 12px;">2. Passivo de Repasse Pendente a Técnicos (41 Endereços - R$ 26.690,80)</h3>
-                        <p>Temos <strong>41 endereços</strong> faturados Claro sem registro de pagamento de mão de obra nos relatórios consolidados. Estes técnicos constam como executores, indicando um passivo pendente de repasse de R$ 26.690,80 (correspondente a um faturamento Claro de R$ 48.098,88).</p>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--warning); margin-bottom: 12px;">2. Passivo de Repasse Pendente a Técnicos (41 Endereços - R$ 26.460,00)</h3>
+                        <p>Temos <strong>41 endereços</strong> faturados Claro sem registro de pagamento de mão de obra nos relatórios consolidados. Estes técnicos constam como executores, indicando um passivo pendente de repasse de R$ 26.460,00 (correspondente a um faturamento Claro de R$ 48.098,88).</p>
                     </div>
 
                     <div>
