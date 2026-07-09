@@ -1799,22 +1799,29 @@
                     <div class="table-responsive">
                         <table id="search-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.72rem; white-space: nowrap;">
                             <thead>
-                                <tr style="background: var(--primary); color: white; font-size: 0.69rem;">
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">CODGED</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">Endereço</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">Cidade</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.01<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Vistoria</span></th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.03<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Rise</span></th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.04<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Conect.</span></th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.05<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Fusões</span></th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.07<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">Drop</span></th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;">1.08<br><span style="font-size:0.52rem;font-weight:normal;opacity:0.85;">NAP</span></th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Fat. Bruto</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Fat. Líq.</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;vertical-align:middle;">Técnico</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Vl. Pago</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Margem R$</th>
-                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;vertical-align:middle;">Margem %</th>
+                                <!-- Grouping Header -->
+                                <tr style="background: #0f172a; color: white; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <th rowspan="2" style="padding: 8px; border-right: 1px solid #334155; vertical-align: middle; text-align: left;">CODGED</th>
+                                    <th rowspan="2" style="padding: 8px; border-right: 1px solid #334155; vertical-align: middle; text-align: left;">Endereço</th>
+                                    <th rowspan="2" style="padding: 8px; border-right: 1px solid #334155; vertical-align: middle; text-align: left;">Cidade</th>
+                                    <th colspan="8" style="padding: 5px; text-align: center; background-color: #1e3a8a; border-right: 1px solid #334155; border-bottom: 1px solid #334155; font-weight: 700;">1. ETAPA DE FATURAMENTO CLARO (RECEITA)</th>
+                                    <th colspan="2" style="padding: 5px; text-align: center; background-color: #5b21b6; border-right: 1px solid #334155; border-bottom: 1px solid #334155; font-weight: 700;">2. ETAPA DE PAGAMENTO / REPASSE (CUSTO)</th>
+                                    <th colspan="2" style="padding: 5px; text-align: center; background-color: #334155; border-bottom: 1px solid #334155; font-weight: 700;">AUDITORIA DE MARGEM (RESULTADO)</th>
+                                </tr>
+                                <!-- Detailed Columns -->
+                                <tr style="background: #1e293b; color: white; font-size: 0.68rem;">
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;border-right:1px solid #334155;">1.01<br><span style="font-size:0.50rem;font-weight:normal;opacity:0.85;">Vistoria</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;border-right:1px solid #334155;">1.03<br><span style="font-size:0.50rem;font-weight:normal;opacity:0.85;">Rise</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;border-right:1px solid #334155;">1.04<br><span style="font-size:0.50rem;font-weight:normal;opacity:0.85;">Conect.</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;border-right:1px solid #334155;">1.05<br><span style="font-size:0.50rem;font-weight:normal;opacity:0.85;">Fusões</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;border-right:1px solid #334155;">1.07<br><span style="font-size:0.50rem;font-weight:normal;opacity:0.85;">Drop</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:center;line-height:1.2;border-right:1px solid #334155;">1.08<br><span style="font-size:0.50rem;font-weight:normal;opacity:0.85;">NAP</span></th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;border-right:1px solid #334155;">Fat. Bruto</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;border-right:1px solid #334155;">Fat. Líq.</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;border-right:1px solid #334155;">Técnico</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;border-right:1px solid #334155;">Vl. Pago</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;border-right:1px solid #334155;">Margem R$</th>
+                                    <th style="padding:6px 8px;font-weight:600;white-space:nowrap;text-align:right;">Margem %</th>
                                 </tr>
                             </thead>
                             <tbody id="search-table-body">
@@ -16397,21 +16404,28 @@ function renderTable() {
         const lpuStyle = 'padding:6px 8px;text-align:center;color:#475569;';
         const zeroStyle = 'padding:6px 8px;text-align:center;color:#cbd5e1;';
 
+        // Group backgrounds
+        const bgFat = 'background-color: #f3f8ff;'; // 1. Faturamento
+        const bgPag = 'background-color: #faf5ff;'; // 2. Pagamento
+        
         tr.innerHTML = `
-            <td style="padding:6px 8px;font-size:0.68rem;color:#94a3b8;white-space:nowrap;">${item.codged}</td>
-            <td style="padding:6px 8px;font-weight:600;color:var(--text-dark);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;">${item.endereco}</td>
-            <td style="padding:6px 8px;color:#64748b;white-space:nowrap;">${item.cidade}</td>
-            <td style="${v101 > 0 ? lpuStyle : zeroStyle}">${v101 > 0 ? v101 : '·'}</td>
-            <td style="${v103 > 0 ? lpuStyle : zeroStyle}">${v103 > 0 ? v103 : '·'}</td>
-            <td style="${v104 > 0 ? lpuStyle : zeroStyle}">${v104 > 0 ? v104 : '·'}</td>
-            <td style="${v105 > 0 ? lpuStyle : zeroStyle}">${v105 > 0 ? v105 : '·'}</td>
-            <td style="${v107 > 0 ? lpuStyle : zeroStyle}">${v107 > 0 ? v107 : '·'}</td>
-            <td style="${v108 > 0 ? lpuStyle : zeroStyle}">${v108 > 0 ? v108 : '·'}</td>
-            <td style="padding:6px 8px;text-align:right;white-space:nowrap;">${R(item.bruto)}</td>
-            <td style="padding:6px 8px;text-align:right;white-space:nowrap;">${R(item.liquido)}</td>
-            <td style="padding:6px 8px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;">${techDisplay}</td>
-            <td style="padding:6px 8px;text-align:right;white-space:nowrap;">${pagoDisplay}</td>
-            <td style="padding:6px 8px;text-align:right;white-space:nowrap;${colorStyle}">${R(item.margem_val)}</td>
+            <td style="padding:6px 8px;font-size:0.68rem;color:#94a3b8;white-space:nowrap;border-right:1px solid #e2e8f0;">${item.codged}</td>
+            <td style="padding:6px 8px;font-weight:600;color:var(--text-dark);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;border-right:1px solid #e2e8f0;">${item.endereco}</td>
+            <td style="padding:6px 8px;color:#64748b;white-space:nowrap;border-right:1px solid #e2e8f0;">${item.cidade}</td>
+            
+            <td style="${bgFat}${v101 > 0 ? lpuStyle : zeroStyle}">${v101 > 0 ? v101 : '·'}</td>
+            <td style="${bgFat}${v103 > 0 ? lpuStyle : zeroStyle}">${v103 > 0 ? v103 : '·'}</td>
+            <td style="${bgFat}${v104 > 0 ? lpuStyle : zeroStyle}">${v104 > 0 ? v104 : '·'}</td>
+            <td style="${bgFat}${v105 > 0 ? lpuStyle : zeroStyle}">${v105 > 0 ? v105 : '·'}</td>
+            <td style="${bgFat}${v107 > 0 ? lpuStyle : zeroStyle}">${v107 > 0 ? v107 : '·'}</td>
+            <td style="${bgFat}${v108 > 0 ? lpuStyle : zeroStyle}">${v108 > 0 ? v108 : '·'}</td>
+            <td style="${bgFat}padding:6px 8px;text-align:right;white-space:nowrap;">${R(item.bruto)}</td>
+            <td style="${bgFat}padding:6px 8px;text-align:right;white-space:nowrap;border-right:1px solid #dbeafe;">${R(item.liquido)}</td>
+            
+            <td style="${bgPag}padding:6px 8px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;">${techDisplay}</td>
+            <td style="${bgPag}padding:6px 8px;text-align:right;white-space:nowrap;border-right:1px solid #f3e8ff;">${pagoDisplay}</td>
+            
+            <td style="padding:6px 8px;text-align:right;white-space:nowrap;${colorStyle}border-right:1px solid #e2e8f0;">${R(item.margem_val)}</td>
             <td style="padding:6px 8px;text-align:right;white-space:nowrap;${colorStyle}">${item.margem_pct.toFixed(2)}%</td>
         `;
         tbody.appendChild(tr);
