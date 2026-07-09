@@ -1783,8 +1783,16 @@
                         <!-- TAB 5.5: ADDRESS LOOKUP/SEARCH -->
             <div id="search-tab" class="tab-content" style="padding-top: 28px; padding-left: 0; padding-right: 0; padding-bottom: 0;">
                 <div class="card" style="border-radius: 0; margin: 0; border-left: none; border-right: none; max-width: 100%; box-shadow: none;">
-                    <h2>Consulta de Endereços (Auditoria Completa)</h2>
-                    <p style="margin-bottom: 20px; font-size: 0.9rem;">Consulte e filtre faturamento LPU Claro, impostos, repasses a técnicos e margens de lucro/prejuízo de todas as 350 obras mapeadas na auditoria. Os resultados estão paginados de 25 em 25.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; width: 100%;">
+                        <div style="flex: 1; min-width: 280px;">
+                            <h2 style="margin: 0 0 6px 0;">Consulta de Endereços (Auditoria Completa)</h2>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">Consulte e filtre faturamento LPU Claro, impostos, repasses a técnicos e margens de lucro/prejuízo de todas as 350 obras mapeadas na auditoria. Os resultados estão paginados de 25 em 25.</p>
+                        </div>
+                        <a href="./Margem_Detalhada_Por_Endereco.xlsx" download class="tab-btn" style="background-color: #16a34a; color: white; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.82rem; box-shadow: var(--shadow); transition: all 0.2s; border: none; cursor: pointer; white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Baixar Planilha de Margens (Excel)
+                        </a>
+                    </div>
                     
                     <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
                         <input type="text" id="search-input" placeholder="Buscar por CODGED, endereço, cidade ou técnico..." style="flex: 1; min-width: 250px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;" oninput="filterAddresses()">
@@ -1839,6 +1847,11 @@
                         <div style="display: flex; gap: 8px;" id="pagination-buttons">
                             <!-- Buttons loaded via JS -->
                         </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 0.72rem; color: #b45309; font-weight: 500; display: flex; align-items: flex-start; gap: 6px;">
+                        <span style="font-weight: 800; font-size: 1rem; line-height: 1; color: #d97706;">*</span>
+                        <span style="line-height: 1.3;">Os valores de repasse marcados com asterisco representam custos estimados acordados (extraídos do histórico de controle de adequação predial) para os 41 endereços concluídos que ainda não possuem registro de pagamento efetivo.</span>
                     </div>
                 </div>
             </div>
@@ -16388,7 +16401,7 @@ function renderTable() {
         tr.style.borderBottom = '1px solid #f1f5f9';
         const isDeficit = item.margem_val < 0;
         const colorStyle = isDeficit ? 'color:var(--danger);font-weight:600;' : 'color:var(--success);font-weight:600;';
-        const techDisplay = item.tecnico || '-';
+        const techDisplay = item.tecnico ? item.tecnico.toUpperCase() : '-';
         const pagoDisplay = item.pago_tech > 0 
             ? (item.has_asterisk 
                 ? R(item.pago_tech) + '<span title="Valor acordado — pagamento pendente" style="color:#f59e0b;font-weight:700;margin-left:2px;">*</span>'
