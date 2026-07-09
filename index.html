@@ -330,15 +330,22 @@
         /* Capa / Portal Portal Grid */
         .portal-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
             margin-top: 10px;
         }
 
-        @media (min-width: 1024px) {
+        @media (max-width: 900px) {
             .portal-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+        }
+        
+        @media (max-width: 560px) {
+            .portal-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
         }
 
@@ -975,12 +982,12 @@
                         <div class="kpi-meta">Deduzidos 20% de impostos</div>
                     </div>
                     <div class="kpi-card success">
-                        <div class="kpi-title">Custo Terceiros Total (Realista)</div>
+                        <div class="kpi-title">Custo Terceiros</div>
                         <div class="kpi-value">R$ 213.017,60</div>
                         <div class="kpi-meta">R$ 186.326,80 pagos + R$ 26.690,80 a checar*</div>
                     </div>
                     <div class="kpi-card success">
-                        <div class="kpi-title">Margem Líquida Real (Provisionada)</div>
+                        <div class="kpi-title">Margem Líquida</div>
                         <div class="kpi-value">23,11%</div>
                         <div class="kpi-meta">Lucro de R$ 64.028,89 (Nominal: 32,75% / R$ 90.719,69)</div>
                     </div>
@@ -1933,12 +1940,11 @@ function switchTab(tabId) {
     
     document.getElementById(tabId).classList.add('active');
     
-    const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabId));
+    const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId));
     if (activeBtn) {
         activeBtn.classList.add('active');
     }
     
-    // Show/Hide top tab navigation bar dynamically
     const navTabs = document.querySelector('.nav-tabs');
     if (tabId === 'portal') {
         navTabs.style.display = 'none';
@@ -1948,13 +1954,12 @@ function switchTab(tabId) {
     
     window.scrollTo({top: 0, behavior: 'smooth'});
     
-    // Auto-trigger search table render if active
     if (tabId === 'search-tab') {
         filterAddresses();
     }
 }
 
-// Injected MDU address data for search
+// MDU address data
 const addressData = [
     {
         "codged": "380816103",
@@ -1962,8 +1967,10 @@ const addressData = [
         "endereco": "AV SAPUCAIA 1941 - PDF 01",
         "bruto": 799.66,
         "liquido": 639.728,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Ribaczki",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 639.728,
         "margem_pct": 100.0
     },
@@ -1975,6 +1982,8 @@ const addressData = [
         "liquido": 497.6959999999999,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -53.50400000000013,
         "margem_pct": -10.75033755545557
     },
@@ -1986,6 +1995,8 @@ const addressData = [
         "liquido": 842.016,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 290.8159999999999,
         "margem_pct": 34.53806103446965
     },
@@ -1997,6 +2008,8 @@ const addressData = [
         "liquido": 936.704,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 385.5039999999999,
         "margem_pct": 41.15537031975948
     },
@@ -2008,6 +2021,8 @@ const addressData = [
         "liquido": 1145.552,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 594.3519999999999,
         "margem_pct": 51.88345880413983
     },
@@ -2019,6 +2034,8 @@ const addressData = [
         "liquido": 1083.04,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 531.8399999999997,
         "margem_pct": 49.10621953021124
     },
@@ -2030,6 +2047,8 @@ const addressData = [
         "liquido": 773.1519999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 221.9519999999999,
         "margem_pct": 28.7074210504532
     },
@@ -2041,6 +2060,8 @@ const addressData = [
         "liquido": 1031.392,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 480.1919999999998,
         "margem_pct": 46.55766187831589
     },
@@ -2052,6 +2073,8 @@ const addressData = [
         "liquido": 1384.528,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 663.7279999999998,
         "margem_pct": 47.93893659066482
     },
@@ -2063,6 +2086,8 @@ const addressData = [
         "liquido": 854.9280000000001,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 303.7280000000001,
         "margem_pct": 35.52673441506185
     },
@@ -2074,6 +2099,8 @@ const addressData = [
         "liquido": 1802.224,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 805.8239999999997,
         "margem_pct": 44.71275490727012
     },
@@ -2085,6 +2112,8 @@ const addressData = [
         "liquido": 1035.696,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 484.4959999999999,
         "margem_pct": 46.7797500424835
     },
@@ -2096,6 +2125,8 @@ const addressData = [
         "liquido": 773.1519999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 221.9519999999999,
         "margem_pct": 28.7074210504532
     },
@@ -2107,6 +2138,8 @@ const addressData = [
         "liquido": 847.1519999999998,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 295.9519999999998,
         "margem_pct": 34.93493493493492
     },
@@ -2118,6 +2151,8 @@ const addressData = [
         "liquido": 1052.912,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 501.7119999999998,
         "margem_pct": 47.6499460543711
     },
@@ -2129,6 +2164,8 @@ const addressData = [
         "liquido": 1051.072,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 330.2719999999999,
         "margem_pct": 31.42239542105583
     },
@@ -2140,6 +2177,8 @@ const addressData = [
         "liquido": 600.992,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 49.79199999999992,
         "margem_pct": 8.284968851498842
     },
@@ -2151,6 +2190,8 @@ const addressData = [
         "liquido": 654.896,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 103.6959999999999,
         "margem_pct": 15.83396447680241
     },
@@ -2162,6 +2203,8 @@ const addressData = [
         "liquido": 659.1999999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 107.9999999999999,
         "margem_pct": 16.38349514563105
     },
@@ -2173,6 +2216,8 @@ const addressData = [
         "liquido": 982.0,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 430.8,
         "margem_pct": 43.86965376782077
     },
@@ -2184,6 +2229,8 @@ const addressData = [
         "liquido": 428.832,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -122.3680000000001,
         "margem_pct": -28.53518394149692
     },
@@ -2195,6 +2242,8 @@ const addressData = [
         "liquido": 428.832,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -122.3680000000001,
         "margem_pct": -28.53518394149692
     },
@@ -2206,6 +2255,8 @@ const addressData = [
         "liquido": 527.2,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -24.0,
         "margem_pct": -4.552352048558421
     },
@@ -2217,6 +2268,8 @@ const addressData = [
         "liquido": 1284.928,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 564.1280000000002,
         "margem_pct": 43.90347163420831
     },
@@ -2228,6 +2281,8 @@ const addressData = [
         "liquido": 706.544,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 155.3439999999999,
         "margem_pct": 21.98645802667632
     },
@@ -2239,6 +2294,8 @@ const addressData = [
         "liquido": 514.912,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -36.28800000000001,
         "margem_pct": -7.047417811198809
     },
@@ -2250,6 +2307,8 @@ const addressData = [
         "liquido": 855.1360000000001,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 134.3360000000001,
         "margem_pct": 15.70931407401865
     },
@@ -2261,6 +2320,8 @@ const addressData = [
         "liquido": 613.9039999999999,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 62.70399999999984,
         "margem_pct": 10.21397482342514
     },
@@ -2272,6 +2333,8 @@ const addressData = [
         "liquido": 1027.296,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 306.4959999999999,
         "margem_pct": 29.8352178924088
     },
@@ -2283,6 +2346,8 @@ const addressData = [
         "liquido": 678.4639999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 127.2639999999999,
         "margem_pct": 18.75766437128571
     },
@@ -2294,6 +2359,8 @@ const addressData = [
         "liquido": 848.5759999999998,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 297.3759999999997,
         "margem_pct": 35.04412097443244
     },
@@ -2305,6 +2372,8 @@ const addressData = [
         "liquido": 710.848,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 159.6479999999999,
         "margem_pct": 22.45880975961105
     },
@@ -2316,6 +2385,8 @@ const addressData = [
         "liquido": 943.472,
         "tecnico": "GABRIEL DE BRITO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 222.672,
         "margem_pct": 23.60133634066512
     },
@@ -2327,6 +2398,8 @@ const addressData = [
         "liquido": 652.032,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 100.832,
         "margem_pct": 15.46427169218688
     },
@@ -2338,6 +2411,8 @@ const addressData = [
         "liquido": 560.208,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 9.007999999999925,
         "margem_pct": 1.607974181018465
     },
@@ -2349,6 +2424,8 @@ const addressData = [
         "liquido": 740.9759999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 189.7759999999998,
         "margem_pct": 25.61162574766253
     },
@@ -2360,6 +2437,8 @@ const addressData = [
         "liquido": 818.448,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 267.2479999999999,
         "margem_pct": 32.65302132817234
     },
@@ -2371,6 +2450,8 @@ const addressData = [
         "liquido": 633.376,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 82.17599999999993,
         "margem_pct": 12.9742838377204
     },
@@ -2382,6 +2463,8 @@ const addressData = [
         "liquido": 446.0479999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -105.1520000000001,
         "margem_pct": -23.57414448669204
     },
@@ -2393,6 +2476,8 @@ const addressData = [
         "liquido": 403.008,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -148.1920000000001,
         "margem_pct": -36.77147848181676
     },
@@ -2404,6 +2489,8 @@ const addressData = [
         "liquido": 586.0319999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 34.83199999999988,
         "margem_pct": 5.943702732956543
     },
@@ -2415,6 +2502,8 @@ const addressData = [
         "liquido": 484.7839999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -66.41600000000011,
         "margem_pct": -13.70012211624148
     },
@@ -2426,6 +2515,8 @@ const addressData = [
         "liquido": 753.888,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 202.688,
         "margem_pct": 26.88569124326159
     },
@@ -2437,6 +2528,8 @@ const addressData = [
         "liquido": 501.9999999999999,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -49.20000000000016,
         "margem_pct": -9.800796812749038
     },
@@ -2448,6 +2541,8 @@ const addressData = [
         "liquido": 527.824,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -23.37600000000009,
         "margem_pct": -4.428748976931722
     },
@@ -2459,6 +2554,8 @@ const addressData = [
         "liquido": 394.4,
         "tecnico": "GABRIEL DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -156.8000000000001,
         "margem_pct": -39.75659229208927
     },
@@ -2470,6 +2567,8 @@ const addressData = [
         "liquido": 635.424,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 84.22399999999993,
         "margem_pct": 13.25477161706198
     },
@@ -2481,6 +2580,8 @@ const addressData = [
         "liquido": 702.24,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 151.04,
         "margem_pct": 21.50831624515835
     },
@@ -2492,6 +2593,8 @@ const addressData = [
         "liquido": 560.208,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 9.007999999999925,
         "margem_pct": 1.607974181018465
     },
@@ -2503,6 +2606,8 @@ const addressData = [
         "liquido": 728.0640000000001,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 176.864,
         "margem_pct": 24.29236990154712
     },
@@ -2512,8 +2617,10 @@ const addressData = [
         "endereco": "RUA FERNANDO MACHADO 797 - PDF 51",
         "bruto": 681.3,
         "liquido": 545.04,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Abraão Rodrigues",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 545.04,
         "margem_pct": 100.0
     },
@@ -2525,6 +2632,8 @@ const addressData = [
         "liquido": 441.744,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -109.4560000000001,
         "margem_pct": -24.77815205186716
     },
@@ -2536,6 +2645,8 @@ const addressData = [
         "liquido": 560.192,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 8.991999999999962,
         "margem_pct": 1.605163943790693
     },
@@ -2547,6 +2658,8 @@ const addressData = [
         "liquido": 398.704,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -152.496,
         "margem_pct": -38.24792327139934
     },
@@ -2558,6 +2671,8 @@ const addressData = [
         "liquido": 368.576,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -182.6240000000001,
         "margem_pct": -49.548532731377
     },
@@ -2569,6 +2684,8 @@ const addressData = [
         "liquido": 413.8559999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -137.3440000000001,
         "margem_pct": -33.18642233047247
     },
@@ -2580,6 +2697,8 @@ const addressData = [
         "liquido": 441.744,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -109.4560000000001,
         "margem_pct": -24.77815205186716
     },
@@ -2591,6 +2710,8 @@ const addressData = [
         "liquido": 480.4799999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -70.72000000000014,
         "margem_pct": -14.71861471861475
     },
@@ -2600,8 +2721,10 @@ const addressData = [
         "endereco": "AV DOS INDUSTRIARIOS 504 - PDF 59",
         "bruto": 729.7199999999999,
         "liquido": 583.776,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 583.776,
         "margem_pct": 100.0
     },
@@ -2613,6 +2736,8 @@ const addressData = [
         "liquido": 721.504,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 170.304,
         "margem_pct": 23.60402714330066
     },
@@ -2624,6 +2749,8 @@ const addressData = [
         "liquido": 648.336,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 97.13599999999997,
         "margem_pct": 14.9823548283606
     },
@@ -2635,6 +2762,8 @@ const addressData = [
         "liquido": 570.8639999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 19.66399999999987,
         "margem_pct": 3.444603268028791
     },
@@ -2646,6 +2775,8 @@ const addressData = [
         "liquido": 385.792,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -165.4080000000001,
         "margem_pct": -42.87491705374919
     },
@@ -2657,6 +2788,8 @@ const addressData = [
         "liquido": 381.4879999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -169.7120000000001,
         "margem_pct": -44.48685148680958
     },
@@ -2668,6 +2801,8 @@ const addressData = [
         "liquido": 579.472,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 28.27199999999993,
         "margem_pct": 4.878924262086854
     },
@@ -2679,6 +2814,8 @@ const addressData = [
         "liquido": 540.736,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -10.46400000000006,
         "margem_pct": -1.935140253284423
     },
@@ -2690,6 +2827,8 @@ const addressData = [
         "liquido": 420.224,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -130.9760000000001,
         "margem_pct": -31.16813889735
     },
@@ -2701,6 +2840,8 @@ const addressData = [
         "liquido": 476.1759999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -75.02400000000011,
         "margem_pct": -15.75551896777665
     },
@@ -2712,6 +2853,8 @@ const addressData = [
         "liquido": 510.6079999999999,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -40.59200000000016,
         "margem_pct": -7.9497383511422
     },
@@ -2723,6 +2866,8 @@ const addressData = [
         "liquido": 608.9759999999999,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 57.77599999999984,
         "margem_pct": 9.487401802369854
     },
@@ -2734,6 +2879,8 @@ const addressData = [
         "liquido": 828.4799999999999,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 277.2799999999999,
         "margem_pct": 33.46852066434916
     },
@@ -2745,6 +2892,8 @@ const addressData = [
         "liquido": 816.3999999999999,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 95.59999999999991,
         "margem_pct": 11.70994610485056
     },
@@ -2756,6 +2905,8 @@ const addressData = [
         "liquido": 801.232,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 250.0319999999999,
         "margem_pct": 31.20594284801405
     },
@@ -2767,6 +2918,8 @@ const addressData = [
         "liquido": 600.992,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 49.79199999999992,
         "margem_pct": 8.284968851498842
     },
@@ -2778,6 +2931,8 @@ const addressData = [
         "liquido": 575.1679999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 23.96799999999985,
         "margem_pct": 4.167130299321216
     },
@@ -2789,6 +2944,8 @@ const addressData = [
         "liquido": 631.12,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 79.91999999999996,
         "margem_pct": 12.66320192673342
     },
@@ -2800,6 +2957,8 @@ const addressData = [
         "liquido": 549.3439999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -1.856000000000108,
         "margem_pct": -0.3378575173297803
     },
@@ -2811,6 +2970,8 @@ const addressData = [
         "liquido": 859.4399999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 138.64,
         "margem_pct": 16.1314344224146
     },
@@ -2822,6 +2983,8 @@ const addressData = [
         "liquido": 857.1839999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 305.9839999999998,
         "margem_pct": 35.69641990517787
     },
@@ -2833,6 +2996,8 @@ const addressData = [
         "liquido": 1076.672,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 525.472,
         "margem_pct": 48.80520715686857
     },
@@ -2842,8 +3007,10 @@ const addressData = [
         "endereco": "RUA PADRE ALOIS KADES 400 BLOCO A - PDF 01",
         "bruto": 2620.68,
         "liquido": 2096.544,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Thiago Santana",
+        "pago_tech": 1040.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 2096.544,
         "margem_pct": 100.0
     },
@@ -2855,6 +3022,8 @@ const addressData = [
         "liquido": 1007.2,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 286.4000000000001,
         "margem_pct": 28.43526608419381
     },
@@ -2866,6 +3035,8 @@ const addressData = [
         "liquido": 1315.216,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 318.8159999999999,
         "margem_pct": 24.2405810148295
     },
@@ -2877,6 +3048,8 @@ const addressData = [
         "liquido": 1345.344,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 348.9439999999998,
         "margem_pct": 25.93715808001522
     },
@@ -2888,6 +3061,8 @@ const addressData = [
         "liquido": 1133.648,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 137.2479999999999,
         "margem_pct": 12.10675624179639
     },
@@ -2899,6 +3074,8 @@ const addressData = [
         "liquido": 1474.464,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 478.064,
         "margem_pct": 32.42290079649283
     },
@@ -2910,6 +3087,8 @@ const addressData = [
         "liquido": 1107.824,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 111.4240000000001,
         "margem_pct": 10.0579153367322
     },
@@ -2921,6 +3100,8 @@ const addressData = [
         "liquido": 801.232,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 250.0319999999999,
         "margem_pct": 31.20594284801405
     },
@@ -2932,6 +3113,8 @@ const addressData = [
         "liquido": 433.136,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -118.0640000000001,
         "margem_pct": -27.25795131321343
     },
@@ -2943,6 +3126,8 @@ const addressData = [
         "liquido": 519.216,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -31.98400000000004,
         "margem_pct": -6.160056700872092
     },
@@ -2954,6 +3139,8 @@ const addressData = [
         "liquido": 600.992,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 49.79199999999992,
         "margem_pct": 8.284968851498842
     },
@@ -2965,6 +3152,8 @@ const addressData = [
         "liquido": 484.7839999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -66.41600000000011,
         "margem_pct": -13.70012211624148
     },
@@ -2976,6 +3165,8 @@ const addressData = [
         "liquido": 871.5199999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 320.3199999999998,
         "margem_pct": 36.7541766109785
     },
@@ -2987,6 +3178,8 @@ const addressData = [
         "liquido": 760.448,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 39.64800000000002,
         "margem_pct": 5.21376872580374
     },
@@ -2998,6 +3191,8 @@ const addressData = [
         "liquido": 764.544,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 213.3439999999999,
         "margem_pct": 27.90473798761091
     },
@@ -3009,6 +3204,8 @@ const addressData = [
         "liquido": 654.2719999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -66.52800000000002,
         "margem_pct": -10.16824806808178
     },
@@ -3020,6 +3217,8 @@ const addressData = [
         "liquido": 804.912,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 84.11200000000008,
         "margem_pct": 10.44983799471248
     },
@@ -3031,6 +3230,8 @@ const addressData = [
         "liquido": 791.9999999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 71.19999999999993,
         "margem_pct": 8.989898989898983
     },
@@ -3042,6 +3243,8 @@ const addressData = [
         "liquido": 908.2079999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 187.4079999999999,
         "margem_pct": 20.63492063492063
     },
@@ -3053,6 +3256,8 @@ const addressData = [
         "liquido": 908.2079999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 187.4079999999999,
         "margem_pct": 20.63492063492063
     },
@@ -3064,6 +3269,8 @@ const addressData = [
         "liquido": 697.312,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -23.48799999999994,
         "margem_pct": -3.368363085677565
     },
@@ -3075,6 +3282,8 @@ const addressData = [
         "liquido": 645.664,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -75.13599999999997,
         "margem_pct": -11.63701243990682
     },
@@ -3086,6 +3295,8 @@ const addressData = [
         "liquido": 684.3999999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -36.40000000000009,
         "margem_pct": -5.318527177089435
     },
@@ -3097,6 +3308,8 @@ const addressData = [
         "liquido": 753.2639999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 32.46399999999994,
         "margem_pct": 4.309777183032767
     },
@@ -3108,6 +3321,8 @@ const addressData = [
         "liquido": 209.328,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -341.8720000000001,
         "margem_pct": -163.3188106703356
     },
@@ -3119,6 +3334,8 @@ const addressData = [
         "liquido": 636.2560000000001,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 85.05600000000004,
         "margem_pct": 13.36820399336117
     },
@@ -3130,6 +3347,8 @@ const addressData = [
         "liquido": 209.328,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -341.8720000000001,
         "margem_pct": -163.3188106703356
     },
@@ -3141,6 +3360,8 @@ const addressData = [
         "liquido": 693.0079999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -27.79200000000003,
         "margem_pct": -4.010343314940092
     },
@@ -3152,6 +3373,8 @@ const addressData = [
         "liquido": 887.3119999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 336.1119999999999,
         "margem_pct": 37.87979876300556
     },
@@ -3163,6 +3386,8 @@ const addressData = [
         "liquido": 852.8799999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 301.6799999999998,
         "margem_pct": 35.37191633055059
     },
@@ -3174,6 +3399,8 @@ const addressData = [
         "liquido": 644.0319999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 92.83199999999988,
         "margem_pct": 14.41419059922487
     },
@@ -3183,8 +3410,10 @@ const addressData = [
         "endereco": "RUA CASEMIRO DE ABREU 858 - PDF 32",
         "bruto": 842.6999999999999,
         "liquido": 674.16,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Mário Souza",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 674.16,
         "margem_pct": 100.0
     },
@@ -3194,8 +3423,10 @@ const addressData = [
         "endereco": "RUA PROF IVO CORSEUIL 485 - PDF 33",
         "bruto": 996.16,
         "liquido": 796.928,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Keiber",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 796.928,
         "margem_pct": 100.0
     },
@@ -3205,8 +3436,10 @@ const addressData = [
         "endereco": "RUA LAGOINHA 43 - PDF 34",
         "bruto": 974.64,
         "liquido": 779.712,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Keiber",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 779.712,
         "margem_pct": 100.0
     },
@@ -3216,8 +3449,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 220 BLOCO A - PDF 35",
         "bruto": 1042.8,
         "liquido": 834.24,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 834.24,
         "margem_pct": 100.0
     },
@@ -3227,8 +3462,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 220 BLOCO B - PDF 36",
         "bruto": 261.66,
         "liquido": 209.328,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 209.328,
         "margem_pct": 100.0
     },
@@ -3238,8 +3475,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 220 BLOCO C - PDF 37",
         "bruto": 261.66,
         "liquido": 209.328,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 209.328,
         "margem_pct": 100.0
     },
@@ -3249,8 +3488,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 220 BLOCO D - PDF 38",
         "bruto": 261.66,
         "liquido": 209.328,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 209.328,
         "margem_pct": 100.0
     },
@@ -3260,8 +3501,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 220 BLOCO E - PDF 39",
         "bruto": 261.66,
         "liquido": 209.328,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 209.328,
         "margem_pct": 100.0
     },
@@ -3271,8 +3514,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 220 BLOCO F - PDF 40",
         "bruto": 261.66,
         "liquido": 209.328,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 209.328,
         "margem_pct": 100.0
     },
@@ -3284,6 +3529,8 @@ const addressData = [
         "liquido": 948.384,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 227.5840000000001,
         "margem_pct": 23.99703073860378
     },
@@ -3295,6 +3542,8 @@ const addressData = [
         "liquido": 948.384,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 524.384,
         "margem_pct": 55.2923710227081
     },
@@ -3306,6 +3555,8 @@ const addressData = [
         "liquido": 730.112,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 178.9119999999999,
         "margem_pct": 24.5047335203366
     },
@@ -3317,6 +3568,8 @@ const addressData = [
         "liquido": 763.92,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 212.7199999999999,
         "margem_pct": 27.84584773274688
     },
@@ -3328,6 +3581,8 @@ const addressData = [
         "liquido": 870.0959999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 318.8959999999998,
         "margem_pct": 36.6506684319891
     },
@@ -3339,6 +3594,8 @@ const addressData = [
         "liquido": 545.856,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -5.344000000000051,
         "margem_pct": -0.9790127799273163
     },
@@ -3350,6 +3607,8 @@ const addressData = [
         "liquido": 659.1999999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 107.9999999999999,
         "margem_pct": 16.38349514563105
     },
@@ -3361,6 +3620,8 @@ const addressData = [
         "liquido": 678.4639999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 127.2639999999999,
         "margem_pct": 18.75766437128571
     },
@@ -3372,6 +3633,8 @@ const addressData = [
         "liquido": 575.1679999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 23.96799999999985,
         "margem_pct": 4.167130299321216
     },
@@ -3383,6 +3646,8 @@ const addressData = [
         "liquido": 849.3759999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 128.5759999999999,
         "margem_pct": 15.1377010887993
     },
@@ -3394,6 +3659,8 @@ const addressData = [
         "liquido": 661.2479999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 110.0479999999999,
         "margem_pct": 16.64246999612852
     },
@@ -3405,6 +3672,8 @@ const addressData = [
         "liquido": 685.024,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 133.824,
         "margem_pct": 19.53566590367636
     },
@@ -3416,6 +3685,8 @@ const addressData = [
         "liquido": 1156.416,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 435.616,
         "margem_pct": 37.66948918036416
     },
@@ -3427,6 +3698,8 @@ const addressData = [
         "liquido": 674.16,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 122.9599999999999,
         "margem_pct": 18.23899371069182
     },
@@ -3438,6 +3711,8 @@ const addressData = [
         "liquido": 622.512,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 71.3119999999999,
         "margem_pct": 11.45552214254503
     },
@@ -3449,6 +3724,8 @@ const addressData = [
         "liquido": 497.6959999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -53.50400000000013,
         "margem_pct": -10.75033755545557
     },
@@ -3460,6 +3737,8 @@ const addressData = [
         "liquido": 821.5039999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 100.704,
         "margem_pct": 12.25849174197569
     },
@@ -3471,6 +3750,8 @@ const addressData = [
         "liquido": 1005.344,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 8.944000000000074,
         "margem_pct": 0.8896457332017771
     },
@@ -3482,6 +3763,8 @@ const addressData = [
         "liquido": 639.728,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 88.5279999999999,
         "margem_pct": 13.83838131205761
     },
@@ -3493,6 +3776,8 @@ const addressData = [
         "liquido": 626.816,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 75.61599999999999,
         "margem_pct": 12.06350827036961
     },
@@ -3504,6 +3789,8 @@ const addressData = [
         "liquido": 637.6800000000001,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 86.48000000000002,
         "margem_pct": 13.56166102120186
     },
@@ -3515,6 +3802,8 @@ const addressData = [
         "liquido": 809.8399999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 258.6399999999999,
         "margem_pct": 31.9371727748691
     },
@@ -3526,6 +3815,8 @@ const addressData = [
         "liquido": 463.264,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -87.93600000000009,
         "margem_pct": -18.98183325274575
     },
@@ -3537,6 +3828,8 @@ const addressData = [
         "liquido": 732.3679999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 181.1679999999999,
         "margem_pct": 24.73729054245952
     },
@@ -3548,6 +3841,8 @@ const addressData = [
         "liquido": 594.64,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 43.43999999999994,
         "margem_pct": 7.305260325575127
     },
@@ -3559,6 +3854,8 @@ const addressData = [
         "liquido": 688.704,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -32.096,
         "margem_pct": -4.660347551342813
     },
@@ -3570,6 +3867,8 @@ const addressData = [
         "liquido": 641.6879999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 90.48799999999983,
         "margem_pct": 14.10155714303522
     },
@@ -3581,6 +3880,8 @@ const addressData = [
         "liquido": 1230.024,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 678.8239999999998,
         "margem_pct": 55.1878662530162
     },
@@ -3592,6 +3893,8 @@ const addressData = [
         "liquido": 852.5840000000001,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 301.384,
         "margem_pct": 35.34947876103703
     },
@@ -3603,6 +3906,8 @@ const addressData = [
         "liquido": 554.9039999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 3.703999999999837,
         "margem_pct": 0.6675028473393304
     },
@@ -3614,6 +3919,8 @@ const addressData = [
         "liquido": 1289.84,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 569.0400000000002,
         "margem_pct": 44.11709979532346
     },
@@ -3625,6 +3932,8 @@ const addressData = [
         "liquido": 1567.552,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 846.7520000000002,
         "margem_pct": 54.01747438043524
     },
@@ -3636,6 +3945,8 @@ const addressData = [
         "liquido": 1177.104,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 625.9039999999998,
         "margem_pct": 53.17321154290529
     },
@@ -3647,6 +3958,8 @@ const addressData = [
         "liquido": 867.8399999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 316.6399999999999,
         "margem_pct": 36.48598820058996
     },
@@ -3658,6 +3971,8 @@ const addressData = [
         "liquido": 1603.408,
         "tecnico": "GEM TELECOM",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 882.608,
         "margem_pct": 55.04575254707473
     },
@@ -3667,8 +3982,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 230 BLOCO A - PDF 06",
         "bruto": 3634.96,
         "liquido": 2907.968,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Vinicius de Brito",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 2907.968,
         "margem_pct": 100.0
     },
@@ -3678,8 +3995,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 230 BLOCO B - PDF 07",
         "bruto": 3634.96,
         "liquido": 2907.968,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Vinicius de Brito",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 2907.968,
         "margem_pct": 100.0
     },
@@ -3689,8 +4008,10 @@ const addressData = [
         "endereco": "AV PADRE CACIQUE 230 BLOCO C - PDF 08",
         "bruto": 3634.96,
         "liquido": 2907.968,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Vinicius de Brito",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 2907.968,
         "margem_pct": 100.0
     },
@@ -3702,6 +4023,8 @@ const addressData = [
         "liquido": 1230.68,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 679.4799999999998,
         "margem_pct": 55.21175285208177
     },
@@ -3713,6 +4036,8 @@ const addressData = [
         "liquido": 1161.344,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 440.5439999999999,
         "margem_pct": 37.93397994048275
     },
@@ -3724,6 +4049,8 @@ const addressData = [
         "liquido": 1540.896,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 820.096,
         "margem_pct": 53.22202147322079
     },
@@ -3735,6 +4062,8 @@ const addressData = [
         "liquido": 1106.192,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 385.3919999999998,
         "margem_pct": 34.83952152971635
     },
@@ -3746,6 +4075,8 @@ const addressData = [
         "liquido": 1187.968,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 467.1680000000001,
         "margem_pct": 39.32496498222175
     },
@@ -3757,6 +4088,8 @@ const addressData = [
         "liquido": 1987.008,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 990.6079999999998,
         "margem_pct": 49.85425322897542
     },
@@ -3768,6 +4101,8 @@ const addressData = [
         "liquido": 2145.472,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 1149.072,
         "margem_pct": 53.55800495182411
     },
@@ -3779,6 +4114,8 @@ const addressData = [
         "liquido": 2240.128,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 1243.728,
         "margem_pct": 55.52039883435231
     },
@@ -3790,6 +4127,8 @@ const addressData = [
         "liquido": 1009.872,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 458.6719999999999,
         "margem_pct": 45.41882535608472
     },
@@ -3801,6 +4140,8 @@ const addressData = [
         "liquido": 1091.648,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 540.4479999999999,
         "margem_pct": 49.50753356393269
     },
@@ -3812,6 +4153,8 @@ const addressData = [
         "liquido": 1018.48,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 467.2799999999999,
         "margem_pct": 45.88013510329117
     },
@@ -3823,6 +4166,8 @@ const addressData = [
         "liquido": 1385.952,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 665.152,
         "margem_pct": 47.9924268661541
     },
@@ -3834,6 +4179,8 @@ const addressData = [
         "liquido": 990.6239999999998,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 439.4239999999998,
         "margem_pct": 44.35830345317697
     },
@@ -3845,6 +4192,8 @@ const addressData = [
         "liquido": 1106.832,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 555.6319999999998,
         "margem_pct": 50.20021105280655
     },
@@ -3856,6 +4205,8 @@ const addressData = [
         "liquido": 691.376,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 140.1759999999999,
         "margem_pct": 20.27492999467727
     },
@@ -3867,6 +4218,8 @@ const addressData = [
         "liquido": 489.0879999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -62.11200000000014,
         "margem_pct": -12.69955509029053
     },
@@ -3878,6 +4231,8 @@ const addressData = [
         "liquido": 588.0799999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 36.87999999999988,
         "margem_pct": 6.271255611481412
     },
@@ -3889,6 +4244,8 @@ const addressData = [
         "liquido": 540.736,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -10.46400000000006,
         "margem_pct": -1.935140253284423
     },
@@ -3900,6 +4257,8 @@ const addressData = [
         "liquido": 695.056,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 143.856,
         "margem_pct": 20.69703736101839
     },
@@ -3911,6 +4270,8 @@ const addressData = [
         "liquido": 381.4879999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -169.7120000000001,
         "margem_pct": -44.48685148680958
     },
@@ -3922,6 +4283,8 @@ const addressData = [
         "liquido": 706.544,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 155.3439999999999,
         "margem_pct": 21.98645802667632
     },
@@ -3933,6 +4296,8 @@ const addressData = [
         "liquido": 570.8639999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 19.66399999999987,
         "margem_pct": 3.444603268028791
     },
@@ -3944,6 +4309,8 @@ const addressData = [
         "liquido": 510.6079999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -40.59200000000016,
         "margem_pct": -7.9497383511422
     },
@@ -3955,6 +4322,8 @@ const addressData = [
         "liquido": 1107.024,
         "tecnico": "GEM TELECOM",
         "pago_tech": 0.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 1107.024,
         "margem_pct": 100.0
     },
@@ -3966,6 +4335,8 @@ const addressData = [
         "liquido": 1502.976,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 782.1760000000002,
         "margem_pct": 52.04181570430932
     },
@@ -3977,6 +4348,8 @@ const addressData = [
         "liquido": 450.352,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -100.8480000000001,
         "margem_pct": -22.39315024691798
     },
@@ -3988,6 +4361,8 @@ const addressData = [
         "liquido": 575.1679999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 23.96799999999985,
         "margem_pct": 4.167130299321216
     },
@@ -3999,6 +4374,8 @@ const addressData = [
         "liquido": 480.4799999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -70.72000000000014,
         "margem_pct": -14.71861471861475
     },
@@ -4010,6 +4387,8 @@ const addressData = [
         "liquido": 764.544,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 213.3439999999999,
         "margem_pct": 27.90473798761091
     },
@@ -4021,6 +4400,8 @@ const addressData = [
         "liquido": 721.504,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 170.304,
         "margem_pct": 23.60402714330066
     },
@@ -4032,6 +4413,8 @@ const addressData = [
         "liquido": 467.5679999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -83.63200000000012,
         "margem_pct": -17.88659617424634
     },
@@ -4043,6 +4426,8 @@ const addressData = [
         "liquido": 704.2879999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 153.0879999999999,
         "margem_pct": 21.7365623154164
     },
@@ -4054,6 +4439,8 @@ const addressData = [
         "liquido": 777.4559999999999,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 226.2559999999999,
         "margem_pct": 29.10209709617006
     },
@@ -4065,6 +4452,8 @@ const addressData = [
         "liquido": 635.424,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 84.22399999999993,
         "margem_pct": 13.25477161706198
     },
@@ -4076,6 +4465,8 @@ const addressData = [
         "liquido": 493.3919999999999,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -57.80800000000011,
         "margem_pct": -11.71644453092067
     },
@@ -4085,8 +4476,10 @@ const addressData = [
         "endereco": "AV TAQUARY 727 - PDF 44",
         "bruto": 1304.08,
         "liquido": 1043.264,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "GeM Telecom",
+        "pago_tech": 940.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1043.264,
         "margem_pct": 100.0
     },
@@ -4098,6 +4491,8 @@ const addressData = [
         "liquido": 613.9039999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 62.70399999999984,
         "margem_pct": 10.21397482342514
     },
@@ -4107,8 +4502,10 @@ const addressData = [
         "endereco": "RUA DR. LOSSIO 234 - PDF 46",
         "bruto": 845.52,
         "liquido": 676.4159999999999,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Keiber",
+        "pago_tech": 620.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 676.4159999999999,
         "margem_pct": 100.0
     },
@@ -4118,8 +4515,10 @@ const addressData = [
         "endereco": "AV.PROTASIO ALVES 4495 - PDF 47",
         "bruto": 723.5600000000001,
         "liquido": 578.8480000000001,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Marcos Martins",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 578.8480000000001,
         "margem_pct": 100.0
     },
@@ -4131,6 +4530,8 @@ const addressData = [
         "liquido": 1676.992,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 1125.792,
         "margem_pct": 67.13162614967752
     },
@@ -4140,8 +4541,10 @@ const addressData = [
         "endereco": "AV INDEPENDÊNCIA 330 - PDF 49",
         "bruto": 1496.76,
         "liquido": 1197.408,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Keiber",
+        "pago_tech": 780.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1197.408,
         "margem_pct": 100.0
     },
@@ -4153,6 +4556,8 @@ const addressData = [
         "liquido": 549.3439999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -1.856000000000108,
         "margem_pct": -0.3378575173297803
     },
@@ -4162,8 +4567,10 @@ const addressData = [
         "endereco": "RUA DEMETRIO RIBEIRO 851 - PDF 51",
         "bruto": 813.2399999999999,
         "liquido": 650.5919999999999,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 650.5919999999999,
         "margem_pct": 100.0
     },
@@ -4175,6 +4582,8 @@ const addressData = [
         "liquido": 510.6079999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -40.59200000000016,
         "margem_pct": -7.9497383511422
     },
@@ -4186,6 +4595,8 @@ const addressData = [
         "liquido": 575.1679999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 23.96799999999985,
         "margem_pct": 4.167130299321216
     },
@@ -4197,6 +4608,8 @@ const addressData = [
         "liquido": 430.2719999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -120.9280000000001,
         "margem_pct": -28.10501264316528
     },
@@ -4208,6 +4621,8 @@ const addressData = [
         "liquido": 411.616,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -139.5840000000001,
         "margem_pct": -33.91121822280962
     },
@@ -4219,6 +4634,8 @@ const addressData = [
         "liquido": 1283.2,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 0.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 1283.2,
         "margem_pct": 100.0
     },
@@ -4230,6 +4647,8 @@ const addressData = [
         "liquido": 493.3919999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -57.80800000000011,
         "margem_pct": -11.71644453092067
     },
@@ -4241,6 +4660,8 @@ const addressData = [
         "liquido": 385.792,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -165.4080000000001,
         "margem_pct": -42.87491705374919
     },
@@ -4252,6 +4673,8 @@ const addressData = [
         "liquido": 633.376,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 82.17599999999993,
         "margem_pct": 12.9742838377204
     },
@@ -4261,8 +4684,10 @@ const addressData = [
         "endereco": "RUA EVARISTO DA VEIGA 111 - PDF 60",
         "bruto": 831.9399999999999,
         "liquido": 665.5519999999999,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Ribaczki",
+        "pago_tech": 620.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 665.5519999999999,
         "margem_pct": 100.0
     },
@@ -4274,6 +4699,8 @@ const addressData = [
         "liquido": 626.816,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 75.61599999999999,
         "margem_pct": 12.06350827036961
     },
@@ -4285,6 +4712,8 @@ const addressData = [
         "liquido": 865.168,
         "tecnico": "VINICIUS DE BRITO",
         "pago_tech": 0.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 865.168,
         "margem_pct": 100.0
     },
@@ -4296,6 +4725,8 @@ const addressData = [
         "liquido": 676.4159999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 125.2159999999999,
         "margem_pct": 18.51168511685115
     },
@@ -4307,6 +4738,8 @@ const addressData = [
         "liquido": 659.1999999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 235.1999999999999,
         "margem_pct": 35.67961165048543
     },
@@ -4318,6 +4751,8 @@ const addressData = [
         "liquido": 719.4559999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 168.2559999999999,
         "margem_pct": 23.38655873326512
     },
@@ -4329,6 +4764,8 @@ const addressData = [
         "liquido": 856.5599999999998,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 135.7599999999999,
         "margem_pct": 15.84944428878303
     },
@@ -4340,6 +4777,8 @@ const addressData = [
         "liquido": 689.328,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 138.1279999999999,
         "margem_pct": 20.03806605853816
     },
@@ -4351,6 +4790,8 @@ const addressData = [
         "liquido": 476.1759999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -75.02400000000011,
         "margem_pct": -15.75551896777665
     },
@@ -4362,6 +4803,8 @@ const addressData = [
         "liquido": 607.5519999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 183.5519999999999,
         "margem_pct": 30.21173496260402
     },
@@ -4373,6 +4816,8 @@ const addressData = [
         "liquido": 441.744,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -109.4560000000001,
         "margem_pct": -24.77815205186716
     },
@@ -4384,6 +4829,8 @@ const addressData = [
         "liquido": 984.2560000000001,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 263.4560000000001,
         "margem_pct": 26.76701996228625
     },
@@ -4395,6 +4842,8 @@ const addressData = [
         "liquido": 635.424,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 84.22399999999993,
         "margem_pct": 13.25477161706198
     },
@@ -4404,8 +4853,10 @@ const addressData = [
         "endereco": "RUA BR DO GRAVATAI 587 - PDF 73",
         "bruto": 821.18,
         "liquido": 656.944,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 656.944,
         "margem_pct": 100.0
     },
@@ -4417,6 +4868,8 @@ const addressData = [
         "liquido": 747.328,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 196.1279999999999,
         "margem_pct": 26.24389826153977
     },
@@ -4428,6 +4881,8 @@ const addressData = [
         "liquido": 870.7199999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 319.5199999999999,
         "margem_pct": 36.69606762219771
     },
@@ -4437,8 +4892,10 @@ const addressData = [
         "endereco": "AV PROTASIO ALVES 5581 - PDF 76",
         "bruto": 864.2199999999999,
         "liquido": 691.376,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Murilo Didio",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 691.376,
         "margem_pct": 100.0
     },
@@ -4450,6 +4907,8 @@ const addressData = [
         "liquido": 527.824,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -23.37600000000009,
         "margem_pct": -4.428748976931722
     },
@@ -4461,6 +4920,8 @@ const addressData = [
         "liquido": 385.792,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -165.4080000000001,
         "margem_pct": -42.87491705374919
     },
@@ -4472,6 +4933,8 @@ const addressData = [
         "liquido": 367.136,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -184.064,
         "margem_pct": -50.13509979952934
     },
@@ -4483,6 +4946,8 @@ const addressData = [
         "liquido": 679.9039999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 128.7039999999998,
         "margem_pct": 18.92973125617732
     },
@@ -4494,6 +4959,8 @@ const addressData = [
         "liquido": 338.448,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -212.7520000000001,
         "margem_pct": -62.86105989694135
     },
@@ -4505,6 +4972,8 @@ const addressData = [
         "liquido": 1432.256,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 435.8559999999999,
         "margem_pct": 30.43143125251351
     },
@@ -4514,8 +4983,10 @@ const addressData = [
         "endereco": "RUA DEMETRIO RIBEIRO 814 - PDF 83",
         "bruto": 816.06,
         "liquido": 652.848,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Guilherme Albrecht",
+        "pago_tech": 680.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 652.848,
         "margem_pct": 100.0
     },
@@ -4527,6 +4998,8 @@ const addressData = [
         "liquido": 575.1679999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 23.96799999999985,
         "margem_pct": 4.167130299321216
     },
@@ -4538,6 +5011,8 @@ const addressData = [
         "liquido": 338.448,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -212.7520000000001,
         "margem_pct": -62.86105989694135
     },
@@ -4549,6 +5024,8 @@ const addressData = [
         "liquido": 565.9359999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 14.73599999999988,
         "margem_pct": 2.60382799468489
     },
@@ -4560,6 +5037,8 @@ const addressData = [
         "liquido": 631.12,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 79.91999999999996,
         "margem_pct": 12.66320192673342
     },
@@ -4571,6 +5050,8 @@ const addressData = [
         "liquido": 661.2479999999999,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 110.0479999999999,
         "margem_pct": 16.64246999612852
     },
@@ -4582,6 +5063,8 @@ const addressData = [
         "liquido": 695.888,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -24.91199999999992,
         "margem_pct": -3.579886418504115
     },
@@ -4593,6 +5076,8 @@ const addressData = [
         "liquido": 928.3040000000001,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 207.5040000000001,
         "margem_pct": 22.35302228580294
     },
@@ -4604,6 +5089,8 @@ const addressData = [
         "liquido": 661.2479999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 110.0479999999999,
         "margem_pct": 16.64246999612852
     },
@@ -4615,6 +5102,8 @@ const addressData = [
         "liquido": 608.9759999999999,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 57.77599999999984,
         "margem_pct": 9.487401802369854
     },
@@ -4626,6 +5115,8 @@ const addressData = [
         "liquido": 631.12,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 79.91999999999996,
         "margem_pct": 12.66320192673342
     },
@@ -4637,6 +5128,8 @@ const addressData = [
         "liquido": 639.728,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 88.5279999999999,
         "margem_pct": 13.83838131205761
     },
@@ -4648,6 +5141,8 @@ const addressData = [
         "liquido": 600.992,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 49.79199999999992,
         "margem_pct": 8.284968851498842
     },
@@ -4659,6 +5154,8 @@ const addressData = [
         "liquido": 594.64,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 43.43999999999994,
         "margem_pct": 7.305260325575127
     },
@@ -4670,6 +5167,8 @@ const addressData = [
         "liquido": 1139.408,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 143.0079999999999,
         "margem_pct": 12.55107915689551
     },
@@ -4681,6 +5180,8 @@ const addressData = [
         "liquido": 689.328,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 138.1279999999999,
         "margem_pct": 20.03806605853816
     },
@@ -4692,6 +5193,8 @@ const addressData = [
         "liquido": 752.464,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 328.4640000000001,
         "margem_pct": 43.65178932148249
     },
@@ -4703,6 +5206,8 @@ const addressData = [
         "liquido": 756.144,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 35.34400000000005,
         "margem_pct": 4.674241943333551
     },
@@ -4714,6 +5219,8 @@ const addressData = [
         "liquido": 872.1439999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 320.9439999999998,
         "margem_pct": 36.79942761745765
     },
@@ -4725,6 +5232,8 @@ const addressData = [
         "liquido": 1573.904,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 853.104,
         "margem_pct": 54.20305177444114
     },
@@ -4736,6 +5245,8 @@ const addressData = [
         "liquido": 1158.464,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 607.2639999999999,
         "margem_pct": 52.41975581459587
     },
@@ -4747,6 +5258,8 @@ const addressData = [
         "liquido": 1228.128,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 676.9279999999999,
         "margem_pct": 55.11868469736053
     },
@@ -4758,6 +5271,8 @@ const addressData = [
         "liquido": 1619.2,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 2692.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -1073.2,
         "margem_pct": -66.2796442687747
     },
@@ -4767,8 +5282,10 @@ const addressData = [
         "endereco": "RUA REPUBLICA 2708 BLOCOS D,F,G,H,J - PDF 06",
         "bruto": 1693.0,
         "liquido": 1354.4,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 1040.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1354.4,
         "margem_pct": 100.0
     },
@@ -4778,8 +5295,10 @@ const addressData = [
         "endereco": "RUA REPUBLICA 2708 BLOCOS I,L,M,N,P - PDF 07",
         "bruto": 1558.5,
         "liquido": 1246.8,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 1040.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1246.8,
         "margem_pct": 100.0
     },
@@ -4789,8 +5308,10 @@ const addressData = [
         "endereco": "RUA REPUBLICA 2708 BLOCOS O,Q,R,U - PDF 08",
         "bruto": 1843.64,
         "liquido": 1474.912,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 1040.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1474.912,
         "margem_pct": 100.0
     },
@@ -4800,8 +5321,10 @@ const addressData = [
         "endereco": "RUA REPUBLICA 2708 BLOCOS S,T,V - PDF 09",
         "bruto": 1265.16,
         "liquido": 1012.128,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 1040.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1012.128,
         "margem_pct": 100.0
     },
@@ -4813,6 +5336,8 @@ const addressData = [
         "liquido": 1140.624,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 419.8239999999998,
         "margem_pct": 36.80651993996268
     },
@@ -4824,6 +5349,8 @@ const addressData = [
         "liquido": 1073.808,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 522.6079999999997,
         "margem_pct": 48.66866329921177
     },
@@ -4835,6 +5362,8 @@ const addressData = [
         "liquido": 1330.0,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 609.2,
         "margem_pct": 45.80451127819549
     },
@@ -4844,8 +5373,10 @@ const addressData = [
         "endereco": "RUA TENENTE ARY TARRAGO 1981 - PDF 13",
         "bruto": 1464.22,
         "liquido": 1171.376,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Murilo Didio",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1171.376,
         "margem_pct": 100.0
     },
@@ -4857,6 +5388,8 @@ const addressData = [
         "liquido": 1022.784,
         "tecnico": "MARCOS MARTINS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 471.5839999999998,
         "margem_pct": 46.10787810524997
     },
@@ -4868,6 +5401,8 @@ const addressData = [
         "liquido": 1016.432,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 465.232,
         "margem_pct": 45.77108945802571
     },
@@ -4879,6 +5414,8 @@ const addressData = [
         "liquido": 947.5679999999999,
         "tecnico": "MURILO DIDIO",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 523.5679999999999,
         "margem_pct": 55.25387096229505
     },
@@ -4890,6 +5427,8 @@ const addressData = [
         "liquido": 1087.344,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 536.1439999999998,
         "margem_pct": 49.30767080151266
     },
@@ -4901,6 +5440,8 @@ const addressData = [
         "liquido": 1113.168,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 561.9679999999998,
         "margem_pct": 50.48366464001839
     },
@@ -4912,6 +5453,8 @@ const addressData = [
         "liquido": 1117.472,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 566.2719999999999,
         "margem_pct": 50.67437931330717
     },
@@ -4923,6 +5466,8 @@ const addressData = [
         "liquido": 1005.568,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 454.3679999999998,
         "margem_pct": 45.18520875763746
     },
@@ -4934,6 +5479,8 @@ const addressData = [
         "liquido": 1052.912,
         "tecnico": "GEM TELECOM",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 501.7119999999998,
         "margem_pct": 47.6499460543711
     },
@@ -4943,8 +5490,10 @@ const addressData = [
         "endereco": "RUA LEÃO XIII 7 - PDF 22",
         "bruto": 1052.52,
         "liquido": 842.016,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "David Salomão",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 842.016,
         "margem_pct": 100.0
     },
@@ -4956,6 +5505,8 @@ const addressData = [
         "liquido": 669.856,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 118.6559999999999,
         "margem_pct": 17.71365786079395
     },
@@ -4967,6 +5518,8 @@ const addressData = [
         "liquido": 699.9839999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 148.7839999999999,
         "margem_pct": 21.25534297926808
     },
@@ -4978,6 +5531,8 @@ const addressData = [
         "liquido": 437.4399999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -113.7600000000001,
         "margem_pct": -26.00585223116316
     },
@@ -4989,6 +5544,8 @@ const addressData = [
         "liquido": 493.3919999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -57.80800000000011,
         "margem_pct": -11.71644453092067
     },
@@ -5000,6 +5557,8 @@ const addressData = [
         "liquido": 493.3919999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -57.80800000000011,
         "margem_pct": -11.71644453092067
     },
@@ -5011,6 +5570,8 @@ const addressData = [
         "liquido": 364.272,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -186.9280000000001,
         "margem_pct": -51.31550050511707
     },
@@ -5022,6 +5583,8 @@ const addressData = [
         "liquido": 424.528,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -126.6720000000001,
         "margem_pct": -29.83831455169037
     },
@@ -5033,6 +5596,8 @@ const addressData = [
         "liquido": 796.928,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 245.728,
         "margem_pct": 30.83440411178927
     },
@@ -5044,6 +5609,8 @@ const addressData = [
         "liquido": 790.5759999999999,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 69.77599999999995,
         "margem_pct": 8.825969925725035
     },
@@ -5055,6 +5622,8 @@ const addressData = [
         "liquido": 650.5919999999999,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 99.39199999999983,
         "margem_pct": 15.27716295312574
     },
@@ -5066,6 +5635,8 @@ const addressData = [
         "liquido": 766.8,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 215.5999999999999,
         "margem_pct": 28.1168492436098
     },
@@ -5077,6 +5648,8 @@ const addressData = [
         "liquido": 609.5999999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 58.39999999999986,
         "margem_pct": 9.580052493438298
     },
@@ -5088,6 +5661,8 @@ const addressData = [
         "liquido": 928.0959999999999,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 376.8959999999998,
         "margem_pct": 40.6095921111609
     },
@@ -5099,6 +5674,8 @@ const addressData = [
         "liquido": 722.9759999999999,
         "tecnico": "GUILHERME ALBRECHT",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 171.7759999999998,
         "margem_pct": 23.75957154870976
     },
@@ -5108,8 +5685,10 @@ const addressData = [
         "endereco": "RUA ORFANOTROFIO 920 BLOCO 50 - PDF 37",
         "bruto": 1423.04,
         "liquido": 1138.432,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "ABraão Rodrigues",
+        "pago_tech": 620.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 1138.432,
         "margem_pct": 100.0
     },
@@ -5119,8 +5698,10 @@ const addressData = [
         "endereco": "RUA ORFANOTROFIO 920 BLOCO 51 - PDF 38",
         "bruto": 904.6999999999999,
         "liquido": 723.76,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "ABraão Rodrigues",
+        "pago_tech": 620.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 723.76,
         "margem_pct": 100.0
     },
@@ -5130,8 +5711,10 @@ const addressData = [
         "endereco": "RUA ORFANOTROFIO 920 BLOCO 52 - PDF 39",
         "bruto": 694.88,
         "liquido": 555.904,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "ABraão Rodrigues",
+        "pago_tech": 620.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 555.904,
         "margem_pct": 100.0
     },
@@ -5141,8 +5724,10 @@ const addressData = [
         "endereco": "RUA PRESIDENTE JUAREZ 50 - PDF 40",
         "bruto": 1233.66,
         "liquido": 986.9280000000001,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Abraão Rodrigues",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 986.9280000000001,
         "margem_pct": 100.0
     },
@@ -5154,6 +5739,8 @@ const addressData = [
         "liquido": 704.2879999999999,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 153.0879999999999,
         "margem_pct": 21.7365623154164
     },
@@ -5165,6 +5752,8 @@ const addressData = [
         "liquido": 579.472,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 28.27199999999993,
         "margem_pct": 4.878924262086854
     },
@@ -5176,6 +5765,8 @@ const addressData = [
         "liquido": 637.6800000000001,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 86.48000000000002,
         "margem_pct": 13.56166102120186
     },
@@ -5187,6 +5778,8 @@ const addressData = [
         "liquido": 829.104,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 277.904,
         "margem_pct": 33.5185935660665
     },
@@ -5198,6 +5791,8 @@ const addressData = [
         "liquido": 385.792,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -165.4080000000001,
         "margem_pct": -42.87491705374919
     },
@@ -5209,6 +5804,8 @@ const addressData = [
         "liquido": 326.992,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -224.2080000000001,
         "margem_pct": -68.56681509027747
     },
@@ -5220,6 +5817,8 @@ const addressData = [
         "liquido": 728.0640000000001,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 176.864,
         "margem_pct": 24.29236990154712
     },
@@ -5231,6 +5830,8 @@ const addressData = [
         "liquido": 579.472,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 28.27199999999993,
         "margem_pct": 4.878924262086854
     },
@@ -5242,6 +5843,8 @@ const addressData = [
         "liquido": 652.64,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 101.4399999999999,
         "margem_pct": 15.54302525128707
     },
@@ -5253,6 +5856,8 @@ const addressData = [
         "liquido": 801.232,
         "tecnico": "ABRAÃO RODRIGUES",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 250.0319999999999,
         "margem_pct": 31.20594284801405
     },
@@ -5264,6 +5869,8 @@ const addressData = [
         "liquido": 411.616,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -139.5840000000001,
         "margem_pct": -33.91121822280962
     },
@@ -5275,6 +5882,8 @@ const addressData = [
         "liquido": 497.6959999999999,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -53.50400000000013,
         "margem_pct": -10.75033755545557
     },
@@ -5286,6 +5895,8 @@ const addressData = [
         "liquido": 771.104,
         "tecnico": "GABRIEL DE BRITO",
         "pago_tech": 0.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 771.104,
         "margem_pct": 100.0
     },
@@ -5297,6 +5908,8 @@ const addressData = [
         "liquido": 667.808,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 116.6079999999999,
         "margem_pct": 17.46130624371076
     },
@@ -5308,6 +5921,8 @@ const addressData = [
         "liquido": 861.6959999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 140.896,
         "margem_pct": 16.3510101010101
     },
@@ -5319,6 +5934,8 @@ const addressData = [
         "liquido": 566.56,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 15.3599999999999,
         "margem_pct": 2.711098559728873
     },
@@ -5330,6 +5947,8 @@ const addressData = [
         "liquido": 885.0559999999999,
         "tecnico": "LUIS HENRIQUE RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 333.8559999999999,
         "margem_pct": 37.72145491358738
     },
@@ -5341,6 +5960,8 @@ const addressData = [
         "liquido": 792.624,
         "tecnico": "LUIS HENRIQUE RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 241.424,
         "margem_pct": 30.45883041643957
     },
@@ -5352,6 +5973,8 @@ const addressData = [
         "liquido": 775.408,
         "tecnico": "LUIS HENRIQUE RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 224.208,
         "margem_pct": 28.91484225078926
     },
@@ -5363,6 +5986,8 @@ const addressData = [
         "liquido": 1407.664,
         "tecnico": "LUIS HENRIQUE RIBACZKI",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 411.264,
         "margem_pct": 29.21606292410689
     },
@@ -5374,6 +5999,8 @@ const addressData = [
         "liquido": 596.896,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -123.904,
         "margem_pct": -20.75805500455691
     },
@@ -5385,6 +6012,8 @@ const addressData = [
         "liquido": 695.888,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -24.91199999999992,
         "margem_pct": -3.579886418504115
     },
@@ -5396,6 +6025,8 @@ const addressData = [
         "liquido": 949.824,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 229.024,
         "margem_pct": 24.11225658648339
     },
@@ -5407,6 +6038,8 @@ const addressData = [
         "liquido": 825.008,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 104.2080000000001,
         "margem_pct": 12.63115024339159
     },
@@ -5418,6 +6051,8 @@ const addressData = [
         "liquido": 876.6560000000002,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 155.8560000000002,
         "margem_pct": 17.7784672665219
     },
@@ -5429,6 +6064,8 @@ const addressData = [
         "liquido": 781.968,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 61.16800000000001,
         "margem_pct": 7.822314979641113
     },
@@ -5440,6 +6077,8 @@ const addressData = [
         "liquido": 700.192,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -20.60799999999995,
         "margem_pct": -2.943192724281332
     },
@@ -5451,6 +6090,8 @@ const addressData = [
         "liquido": 631.328,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -89.47199999999998,
         "margem_pct": -14.17203102032541
     },
@@ -5462,6 +6103,8 @@ const addressData = [
         "liquido": 756.144,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 35.34400000000005,
         "margem_pct": 4.674241943333551
     },
@@ -5473,6 +6116,8 @@ const addressData = [
         "liquido": 880.9599999999998,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 160.1599999999999,
         "margem_pct": 18.18016709044677
     },
@@ -5484,6 +6129,8 @@ const addressData = [
         "liquido": 825.008,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 104.2080000000001,
         "margem_pct": 12.63115024339159
     },
@@ -5495,6 +6142,8 @@ const addressData = [
         "liquido": 769.056,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 48.25600000000009,
         "margem_pct": 6.274705613115311
     },
@@ -5506,6 +6155,8 @@ const addressData = [
         "liquido": 837.9200000000001,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 117.1200000000001,
         "margem_pct": 13.97746801603973
     },
@@ -5517,6 +6168,8 @@ const addressData = [
         "liquido": 1156.416,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 435.616,
         "margem_pct": 37.66948918036416
     },
@@ -5528,6 +6181,8 @@ const addressData = [
         "liquido": 1160.72,
         "tecnico": "MARCOS VINICIUS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 439.9200000000001,
         "margem_pct": 37.90061341236474
     },
@@ -5539,6 +6194,8 @@ const addressData = [
         "liquido": 876.6560000000002,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 155.8560000000002,
         "margem_pct": 17.7784672665219
     },
@@ -5550,6 +6207,8 @@ const addressData = [
         "liquido": 751.632,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 200.4319999999999,
         "margem_pct": 26.66624092641078
     },
@@ -5561,6 +6220,8 @@ const addressData = [
         "liquido": 1180.784,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 459.9840000000002,
         "margem_pct": 38.95581240938225
     },
@@ -5572,6 +6233,8 @@ const addressData = [
         "liquido": 209.328,
         "tecnico": "INOIR SANTOS",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -341.8720000000001,
         "margem_pct": -163.3188106703356
     },
@@ -5583,6 +6246,8 @@ const addressData = [
         "liquido": 747.3599999999999,
         "tecnico": "INOIR SANTOS",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 323.3599999999999,
         "margem_pct": 43.26696638835366
     },
@@ -5594,6 +6259,8 @@ const addressData = [
         "liquido": 209.328,
         "tecnico": "INOIR SANTOS",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -214.672,
         "margem_pct": -102.5529312848735
     },
@@ -5605,6 +6272,8 @@ const addressData = [
         "liquido": 209.328,
         "tecnico": "INOIR SANTOS",
         "pago_tech": 424.0,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -214.672,
         "margem_pct": -102.5529312848735
     },
@@ -5616,6 +6285,8 @@ const addressData = [
         "liquido": 1191.056,
         "tecnico": "GABRIEL DE BRITO",
         "pago_tech": 996.4,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 194.6560000000001,
         "margem_pct": 16.34314423503178
     },
@@ -5627,6 +6298,8 @@ const addressData = [
         "liquido": 540.736,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -10.46400000000006,
         "margem_pct": -1.935140253284423
     },
@@ -5638,6 +6311,8 @@ const addressData = [
         "liquido": 732.3679999999999,
         "tecnico": "DAVID SALOMÃO",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 181.1679999999999,
         "margem_pct": 24.73729054245952
     },
@@ -5649,6 +6324,8 @@ const addressData = [
         "liquido": 880.7519999999998,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 329.5519999999998,
         "margem_pct": 37.41711628244953
     },
@@ -5658,8 +6335,10 @@ const addressData = [
         "endereco": "RUA VINTE E CINCO DE JULHO 1420 - PDF 37",
         "bruto": 760.4399999999999,
         "liquido": 608.352,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Ribaczki",
+        "pago_tech": 780.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 608.352,
         "margem_pct": 100.0
     },
@@ -5669,8 +6348,10 @@ const addressData = [
         "endereco": "RUA VINTE E CINCO DE JULHO 1430 - PDF 38",
         "bruto": 991.7799999999999,
         "liquido": 793.4239999999999,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Ribaczki",
+        "pago_tech": 780.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 793.4239999999999,
         "margem_pct": 100.0
     },
@@ -5680,8 +6361,10 @@ const addressData = [
         "endereco": "RUA VINTE E CINCO DE JULHO 1434 - PDF 39",
         "bruto": 921.8399999999999,
         "liquido": 737.472,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Ribaczki",
+        "pago_tech": 780.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 737.472,
         "margem_pct": 100.0
     },
@@ -5693,6 +6376,8 @@ const addressData = [
         "liquido": 680.72,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 129.52,
         "margem_pct": 19.02691268069103
     },
@@ -5704,6 +6389,8 @@ const addressData = [
         "liquido": 734.624,
         "tecnico": "GABRIEL DE BRITO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 13.82400000000007,
         "margem_pct": 1.881778978089481
     },
@@ -5713,8 +6400,10 @@ const addressData = [
         "endereco": "RUA JOSE DE ALENCAR 195 - PDF 42",
         "bruto": 1140.02,
         "liquido": 912.016,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Paulo Ribaczki",
+        "pago_tech": 680.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 912.016,
         "margem_pct": 100.0
     },
@@ -5726,6 +6415,8 @@ const addressData = [
         "liquido": 551.6,
         "tecnico": "LUIS HENRIQUE RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 0.3999999999999773,
         "margem_pct": 0.07251631617113438
     },
@@ -5737,6 +6428,8 @@ const addressData = [
         "liquido": 958.432,
         "tecnico": "GABRIEL DE BRITO",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 237.6320000000001,
         "margem_pct": 24.79382992220627
     },
@@ -5748,6 +6441,8 @@ const addressData = [
         "liquido": 958.432,
         "tecnico": "INOIR SANTOS",
         "pago_tech": 720.8,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 237.6320000000001,
         "margem_pct": 24.79382992220627
     },
@@ -5759,6 +6454,8 @@ const addressData = [
         "liquido": 616.16,
         "tecnico": "PAULO KEIBER",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": 64.95999999999992,
         "margem_pct": 10.54271617761619
     },
@@ -5768,8 +6465,10 @@ const addressData = [
         "endereco": "RUA SALDANHA MARINHO 37 - PDF 47",
         "bruto": 1203.42,
         "liquido": 962.7360000000001,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "Derik Pereira",
+        "pago_tech": 780.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 962.7360000000001,
         "margem_pct": 100.0
     },
@@ -5779,8 +6478,10 @@ const addressData = [
         "endereco": "RUA CRISTOVÃO COLOMBO 3 - PDF 48",
         "bruto": 530.66,
         "liquido": 424.528,
-        "tecnico": "-",
-        "pago_tech": 0.0,
+        "tecnico": "KMR Ribaczki",
+        "pago_tech": 520.0,
+        "has_asterisk": true,
+        "from_master": true,
         "margem_val": 424.528,
         "margem_pct": 100.0
     },
@@ -5792,6 +6493,8 @@ const addressData = [
         "liquido": 368.576,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -182.6240000000001,
         "margem_pct": -49.548532731377
     },
@@ -5803,6 +6506,8 @@ const addressData = [
         "liquido": 454.6559999999999,
         "tecnico": "PAULO RIBACZKI",
         "pago_tech": 551.2,
+        "has_asterisk": false,
+        "from_master": false,
         "margem_val": -96.5440000000001,
         "margem_pct": -21.23451576576579
     }
@@ -5844,7 +6549,6 @@ function renderTable() {
     
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
-    
     const pageItems = filteredData.slice(startIndex, endIndex);
     
     if (pageItems.length === 0) {
@@ -5862,15 +6566,22 @@ function renderTable() {
         
         const isDeficit = item.margem_val < 0;
         const colorStyle = isDeficit ? 'color: var(--danger); font-weight: 600;' : 'color: var(--success); font-weight: 600;';
+        const techDisplay = item.tecnico || '<span style="color: #94a3b8;">-</span>';
+        const masterBadge = item.from_master ? ' <span style="font-size:0.65rem; background:#e0f2fe; color:#0369a1; padding:1px 5px; border-radius:4px;">*mestre</span>' : '';
+        const pagoDisplay = item.pago_tech > 0 
+            ? (item.has_asterisk 
+                ? formatCurrency(item.pago_tech) + ' <span title="Valor de referência da planilha histórica" style="color:#f59e0b; font-weight:700;">*</span>'
+                : formatCurrency(item.pago_tech))
+            : '<span style="color: #94a3b8;">R$ 0,00</span>';
         
         tr.innerHTML = `
-            <td style="padding: 10px;">${item.codged}</td>
+            <td style="padding: 10px; font-size: 0.78rem; color: #64748b;">${item.codged}</td>
             <td style="padding: 10px; font-weight: 600; color: var(--text-dark);">${item.endereco}</td>
-            <td style="padding: 10px;">${item.cidade}</td>
+            <td style="padding: 10px; color: #64748b;">${item.cidade}</td>
             <td style="padding: 10px; text-align: right;">${formatCurrency(item.bruto)}</td>
             <td style="padding: 10px; text-align: right;">${formatCurrency(item.liquido)}</td>
-            <td style="padding: 10px;">${item.tecnico || '<span style="color: #94a3b8;">-</span>'}</td>
-            <td style="padding: 10px; text-align: right;">${formatCurrency(item.pago_tech)}</td>
+            <td style="padding: 10px;">${techDisplay}${masterBadge}</td>
+            <td style="padding: 10px; text-align: right;">${pagoDisplay}</td>
             <td style="padding: 10px; text-align: right; ${colorStyle}">${formatCurrency(item.margem_val)}</td>
             <td style="padding: 10px; text-align: right; ${colorStyle}">${item.margem_pct.toFixed(2)}%</td>
         `;
@@ -5893,61 +6604,32 @@ function renderPaginationControls() {
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     if (totalPages <= 1) return;
     
-    // Previous Button
     const prevBtn = document.createElement('button');
     prevBtn.className = 'tab-btn';
-    prevBtn.style.padding = '6px 12px';
-    prevBtn.style.fontSize = '0.78rem';
-    prevBtn.style.borderRadius = '6px';
+    prevBtn.style.cssText = 'padding: 6px 14px; font-size: 0.78rem; border-radius: 6px; margin: 0 2px;';
     prevBtn.disabled = currentPage === 1;
-    prevBtn.innerText = 'Anterior';
-    prevBtn.onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderTable();
-        }
-    };
+    prevBtn.innerText = '← Anterior';
+    prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderTable(); } };
     container.appendChild(prevBtn);
     
-    // Page buttons
-    let startPage = Math.max(1, currentPage - 1);
-    let endPage = Math.min(totalPages, currentPage + 1);
-    
-    if (currentPage === 1) {
-        endPage = Math.min(totalPages, 3);
-    }
-    if (currentPage === totalPages) {
-        startPage = Math.max(1, totalPages - 2);
-    }
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
     
     for (let i = startPage; i <= endPage; i++) {
         const btn = document.createElement('button');
         btn.className = 'tab-btn' + (i === currentPage ? ' active' : '');
-        btn.style.padding = '6px 12px';
-        btn.style.fontSize = '0.78rem';
-        btn.style.borderRadius = '6px';
+        btn.style.cssText = 'padding: 6px 12px; font-size: 0.78rem; border-radius: 6px; margin: 0 2px;';
         btn.innerText = i;
-        btn.onclick = () => {
-            currentPage = i;
-            renderTable();
-        };
+        btn.onclick = () => { currentPage = i; renderTable(); };
         container.appendChild(btn);
     }
     
-    // Next Button
     const nextBtn = document.createElement('button');
     nextBtn.className = 'tab-btn';
-    nextBtn.style.padding = '6px 12px';
-    nextBtn.style.fontSize = '0.78rem';
-    nextBtn.style.borderRadius = '6px';
+    nextBtn.style.cssText = 'padding: 6px 14px; font-size: 0.78rem; border-radius: 6px; margin: 0 2px;';
     nextBtn.disabled = currentPage === totalPages;
-    nextBtn.innerText = 'Próximo';
-    nextBtn.onclick = () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderTable();
-        }
-    };
+    nextBtn.innerText = 'Próximo →';
+    nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderTable(); } };
     container.appendChild(nextBtn);
 }
 
