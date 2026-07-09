@@ -879,6 +879,7 @@
                 <button class="tab-btn" onclick="switchTab('matching')">Diferença de Datas (Fluxo)</button>
                 <button class="tab-btn" onclick="switchTab('payments')">Pagamentos a Terceiros</button>
                 <button class="tab-btn" onclick="switchTab('margins')">Prejuízo por Endereço</button>
+                <button class="tab-btn" onclick="switchTab('search-tab')">Consulta de Endereços</button>
                 <button class="tab-btn" onclick="switchTab('alerts')">Alertas & Pendências</button>
                 <button class="tab-btn" onclick="switchTab('strategy')">Estratégia Claro</button>
             </div>
@@ -940,13 +941,22 @@
                         <div class="portal-card-footer">Visualizar Alertas ➔</div>
                     </div>
 
-                    <div class="portal-card" onclick="switchTab('strategy')" style="grid-column: span 1; @media (min-width: 900px) { grid-column: span 3; }">
+                    <div class="portal-card" onclick="switchTab('strategy')">
                         <div class="portal-card-header">
                             <div class="portal-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></div>
                             <h3>Estratégia Claro</h3>
                             <p>Diretrizes comerciais para a reunião de renegociação (Taxa de Mobilização e Faturamento Mínimo por MDU).</p>
                         </div>
                         <div class="portal-card-footer">Visualizar Estratégia ➔</div>
+                    </div>
+                    
+                    <div class="portal-card" onclick="switchTab('search-tab')">
+                        <div class="portal-card-header">
+                            <div class="portal-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                            <h3>Consulta de Endereços</h3>
+                            <p>Busca detalhada endereço por endereço, permitindo consultar faturamento, custos e margem líquida de cada uma das 350 obras.</p>
+                        </div>
+                        <div class="portal-card-footer">Consultar Endereços ➔</div>
                     </div>
                 </div>
             </div>
@@ -965,14 +975,14 @@
                         <div class="kpi-meta">Deduzidos 20% de impostos</div>
                     </div>
                     <div class="kpi-card success">
-                        <div class="kpi-title">Custo Terceiros Alocado</div>
-                        <div class="kpi-value">R$ 186.326,80</div>
-                        <div class="kpi-meta">Mão de obra para 309 endereços</div>
+                        <div class="kpi-title">Custo Terceiros Total (Realista)</div>
+                        <div class="kpi-value">R$ 213.017,60</div>
+                        <div class="kpi-meta">R$ 186.326,80 pagos + R$ 26.690,80 a checar*</div>
                     </div>
                     <div class="kpi-card success">
-                        <div class="kpi-title">Margem Líquida Real</div>
-                        <div class="kpi-value" style="display: flex; align-items: baseline; gap: 8px;">32,75% <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">/ 23,11%*</span></div>
-                        <div class="kpi-meta">Lucro de R$ 90.719,69 (*R$ 64.028,89 após repasses)</div>
+                        <div class="kpi-title">Margem Líquida Real (Provisionada)</div>
+                        <div class="kpi-value">23,11%</div>
+                        <div class="kpi-meta">Lucro de R$ 64.028,89 (Nominal: 32,75% / R$ 90.719,69)</div>
                     </div>
                 </div>
 
@@ -1741,6 +1751,54 @@
                 </div>
             </div>
 
+                        <!-- TAB 5.5: ADDRESS LOOKUP/SEARCH -->
+            <div id="search-tab" class="tab-content">
+                <div class="card">
+                    <h2>Consulta de Endereços (Auditoria Completa)</h2>
+                    <p style="margin-bottom: 20px; font-size: 0.9rem;">Consulte e filtre faturamento LPU Claro, impostos, repasses a técnicos e margens de lucro/prejuízo de todas as 350 obras mapeadas na auditoria. Os resultados estão paginados de 25 em 25.</p>
+                    
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <input type="text" id="search-input" placeholder="Buscar por CODGED, endereço, cidade ou técnico..." style="flex: 1; min-width: 250px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;" oninput="filterAddresses()">
+                        
+                        <select id="filter-status" style="padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background-color: #ffffff; color: var(--text-dark);" onchange="filterAddresses()">
+                            <option value="all">Todos os Status</option>
+                            <option value="lucrativo">Margem Positiva (Lucro)</option>
+                            <option value="deficitario">Margem Negativa (Prejuízo)</option>
+                        </select>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="search-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+                            <thead>
+                                <tr style="background-color: #f8fafc; border-bottom: 2px solid var(--border);">
+                                    <th style="padding: 10px;">CODGED</th>
+                                    <th style="padding: 10px;">Endereço</th>
+                                    <th style="padding: 10px;">Cidade</th>
+                                    <th style="padding: 10px; text-align: right;">Fat. Bruto (R$)</th>
+                                    <th style="padding: 10px; text-align: right;">Fat. Líquido (R$)</th>
+                                    <th style="padding: 10px;">Técnico / Equipe</th>
+                                    <th style="padding: 10px; text-align: right;">Valor Pago (R$)</th>
+                                    <th style="padding: 10px; text-align: right;">Margem Líquida (R$)</th>
+                                    <th style="padding: 10px; text-align: right;">Margem (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="search-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px;">
+                        <div id="pagination-info" style="font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">
+                            Exibindo 0-0 de 0 endereços
+                        </div>
+                        <div style="display: flex; gap: 8px;" id="pagination-buttons">
+                            <!-- Buttons loaded via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB 6: ALERTS & UNBILLED -->
             <div id="alerts" class="tab-content">
                 <div class="card">
@@ -1890,6 +1948,3999 @@
             
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
-    </script>
+    
+        // Injected MDU address data for search
+        const addressData = [
+    {
+        "codged": "380816103",
+        "cidade": "AV SAPUCAIA 1941 - PDF 01",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 799.66,
+        "liquido": 639.728,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610445843",
+        "cidade": "RUA CORONEL FEIJÓ 577 - PDF 02",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 622.1199999999999,
+        "liquido": 497.6959999999999,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610443641",
+        "cidade": "RUA CORONEL FEIJÓ 588 - PDF 03",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1052.52,
+        "liquido": 842.016,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610445456",
+        "cidade": "AV NILÓPOLIS 16 - PDF 04",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1170.88,
+        "liquido": 936.704,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700814853",
+        "cidade": "PRAÇA GARIBALDI 22 - PDF 05",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1431.94,
+        "liquido": 1145.552,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610482189",
+        "cidade": "PRAÇA GARIBALDI 60 BLOCO A - PDF 06",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1353.8,
+        "liquido": 1083.04,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610482189",
+        "cidade": "PRAÇA GARIBALDI 60 BLOCO B - PDF 07",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 966.4399999999999,
+        "liquido": 773.1519999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610026190",
+        "cidade": "AV CAUDURO 278 - PDF 08",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1289.24,
+        "liquido": 1031.392,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610499392",
+        "cidade": "AV BENJAMIN CONSTANT 1559 - PDF 09",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1730.66,
+        "liquido": 1384.528,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610451594",
+        "cidade": "RUA BARÃO DO AMAZONAS 61 - PDF 10",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1068.66,
+        "liquido": 854.9280000000001,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "703371698",
+        "cidade": "RUA DR VERIDIANO FARIAS 111 - PDF 11",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2252.78,
+        "liquido": 1802.224,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610514802",
+        "cidade": "AV BENJAMIN CONSTANT 1795 - PDF 12",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1294.62,
+        "liquido": 1035.696,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610497779",
+        "cidade": "RUA DOM DIOGO DE SOUZA 570 - PDF 13",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 966.4399999999999,
+        "liquido": 773.1519999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700916784",
+        "cidade": "AV IPIRANGA 1555 - PDF 14",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1058.94,
+        "liquido": 847.1519999999998,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610008768",
+        "cidade": "RUA GENERAL LIMA E SILVA 1497 - PDF 15",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1316.14,
+        "liquido": 1052.912,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "703385399",
+        "cidade": "RUA LUIS DE CAMÕES 800 - PDF 16",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1313.84,
+        "liquido": 1051.072,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610469104",
+        "cidade": "RUA SÃO MANOEL 2107 - PDF 17",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 751.2399999999999,
+        "liquido": 600.992,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610498306",
+        "cidade": "RUA JOSÉ DOMINGOS VARELLA  154 - PDF 18",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 818.62,
+        "liquido": 654.896,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610499084",
+        "cidade": "RUA JOSÉ DOMINGOS VARELLA 134 - PDF 19",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 823.9999999999999,
+        "liquido": 659.1999999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610491745",
+        "cidade": "RUA CORONEL MASSOT 1309 - PDF 20",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1227.5,
+        "liquido": 982.0,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610836948",
+        "cidade": "RUA CAP SALUSTIANO DE VARGAS 268 - PDF 21",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 536.04,
+        "liquido": 428.832,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610495248",
+        "cidade": "AV. ENG ARY DE ABREU LIMA 30 - PDF 22",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 536.04,
+        "liquido": 428.832,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610484290",
+        "cidade": "RUA SANTO ANTONIO 450 - PDF 23",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 659.0,
+        "liquido": 527.2,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610470317",
+        "cidade": "AV JACUÍ BLOCOS A - C 638 - PDF 24",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1606.16,
+        "liquido": 1284.928,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62269321",
+        "cidade": "AV. ASSIS BRASIL 2185 - PDF 25",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 883.18,
+        "liquido": 706.544,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486197",
+        "cidade": "AV. CARNEIRO DA FONTOURA  316 - PDF 26",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 643.64,
+        "liquido": 514.912,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610586565",
+        "cidade": "RUA MARQUES DO POMBAL 917 - PDF 27",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1068.92,
+        "liquido": 855.1360000000001,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610487957",
+        "cidade": "AV. PANAMERICANA 1009 - PDF 28",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 767.3799999999999,
+        "liquido": 613.9039999999999,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700766115",
+        "cidade": "RUA GUILHERME KLIPPEL 100 - PDF 29",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1284.12,
+        "liquido": 1027.296,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62378158",
+        "cidade": "RUA BUARQUE MACEDO 822 - PDF 30",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 848.0799999999999,
+        "liquido": 678.4639999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486490",
+        "cidade": "RUA CRISTOVAO PEREIRA 420 - PDF 31",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1060.72,
+        "liquido": 848.5759999999998,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610512430",
+        "cidade": "RUA AMELIA TELES 184 - PDF 32",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 888.56,
+        "liquido": 710.848,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610471490",
+        "cidade": "RUA DA REPUBLICA 189 - PDF 33",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1179.34,
+        "liquido": 943.472,
+        "tecnico": "GABRIEL DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610485011",
+        "cidade": "RUA VISCONDE DE PELOTAS 495 - PDF 34",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 815.0400000000001,
+        "liquido": 652.032,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486271",
+        "cidade": "RUA CRISTOVÃO PEREIRA 391 - PDF 35",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 700.26,
+        "liquido": 560.208,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610168728",
+        "cidade": "RUA APARICIO MARIENSE 125 - PDF 36",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 926.2199999999999,
+        "liquido": 740.9759999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486280",
+        "cidade": "AV. CARNEIRO DA FONTOURA 98 - PDF 37",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1023.06,
+        "liquido": 818.448,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486273",
+        "cidade": "RUA JOÃO DE MAGALHÃES 10 - PDF 38",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 791.7199999999999,
+        "liquido": 633.376,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700737414",
+        "cidade": "AV DOS INDUSTRIARIOS 421 - PDF 39",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 557.56,
+        "liquido": 446.0479999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700737414",
+        "cidade": "AV DOS INDUSTRIARIOS 433 - PDF 40",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 503.76,
+        "liquido": 403.008,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62215259",
+        "cidade": "RUA AÇORES 234 - PDF 41",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 732.54,
+        "liquido": 586.0319999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610588664",
+        "cidade": "RUA BRITO PEIXOTO 172 - PDF 42",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 605.9799999999999,
+        "liquido": 484.7839999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610485698",
+        "cidade": "RUA BRITO PEIXOTO 125 - PDF 43",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 942.36,
+        "liquido": 753.888,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "701052161",
+        "cidade": "AV ENG MARIA DE CARVALHO 535 - PDF 44",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 627.4999999999999,
+        "liquido": 501.9999999999999,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610447211",
+        "cidade": "RUA VASCO DA GAMA 117 - PDF 45",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 659.78,
+        "liquido": 527.824,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610450576",
+        "cidade": "RUA VASCO DA GAMA 38 - PDF 46",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 493.0,
+        "liquido": 394.4,
+        "tecnico": "GABRIEL DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610508708",
+        "cidade": "RUA COPERNICO 70 - PDF 47",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 794.28,
+        "liquido": 635.424,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486334",
+        "cidade": "RUA CRISTOVÃO PEREIRA 320 - PDF 48",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 877.8,
+        "liquido": 702.24,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610485883",
+        "cidade": "RUA CRISTOVÃO PEREIRA 183 - PDF 49",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 700.26,
+        "liquido": 560.208,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610244102",
+        "cidade": "RUA ALVARES MACHADO 44 - PDF 50",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 910.08,
+        "liquido": 728.0640000000001,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610481462",
+        "cidade": "RUA FERNANDO MACHADO 797 - PDF 51",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 681.3,
+        "liquido": 545.04,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507803",
+        "cidade": "RUA MAESTRO SALVADOR CAMPANELLA 164 - PDF 52",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 552.18,
+        "liquido": 441.744,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610026700",
+        "cidade": "RUA NAPOLEÃO LAUREANO 259 - PDF 53",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 700.24,
+        "liquido": 560.192,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610663571",
+        "cidade": "AV DOS INDUSTRIARIOS 467 - PDF 54",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 498.38,
+        "liquido": 398.704,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610663571",
+        "cidade": "AV DOS INDUSTRIARIOS 449 - PDF 55",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 460.72,
+        "liquido": 368.576,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610485977",
+        "cidade": "RUA NAPOLEÃO LAUREANO 227 - PDF 56",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 517.3199999999999,
+        "liquido": 413.8559999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610477978",
+        "cidade": "AV DOS INDUSTRIARIOS 65 - PDF 57",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 552.18,
+        "liquido": 441.744,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662325",
+        "cidade": "AV DOS INDUSTRIARIOS 520 - PDF 58",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 600.5999999999999,
+        "liquido": 480.4799999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610661837",
+        "cidade": "AV DOS INDUSTRIARIOS 504 - PDF 59",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 729.7199999999999,
+        "liquido": 583.776,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486099",
+        "cidade": "AV DOS INDUSTRIARIOS 448 - PDF 60",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 901.88,
+        "liquido": 721.504,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700737414",
+        "cidade": "AV DOS INDUSTRIARIOS 408 - PDF 61",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 810.42,
+        "liquido": 648.336,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "63143059",
+        "cidade": "AV DOS INDUSTRIARIOS 95 - PDF 62",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 713.5799999999999,
+        "liquido": 570.8639999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610474276",
+        "cidade": "AV DOS INDUSTRIARIOS 73 - PDF 63",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 482.24,
+        "liquido": 385.792,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "708391637",
+        "cidade": "AV DOS INDUSTRIARIOS 79 - PDF 64",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 476.86,
+        "liquido": 381.4879999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700737314",
+        "cidade": "AV DOS INDUSTRIARIOS 89 - PDF 65",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 724.3399999999999,
+        "liquido": 579.472,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "708391644",
+        "cidade": "AV DOS INDUSTRIARIOS 66 - PDF 66",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 675.92,
+        "liquido": 540.736,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "708391408",
+        "cidade": "AV DOS INDUSTRIARIOS 82 - PDF 67",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 525.28,
+        "liquido": 420.224,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662055",
+        "cidade": "AV DOS INDUSTRIARIOS 26 - PDF 68",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 595.2199999999999,
+        "liquido": 476.1759999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489966",
+        "cidade": "RUA AMOROSO COSTA 100 - PDF 69",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 638.2599999999999,
+        "liquido": 510.6079999999999,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489896",
+        "cidade": "RUA AMOROSO COSTA 86 - PDF 70",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 761.2199999999999,
+        "liquido": 608.9759999999999,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610490090",
+        "cidade": "RUA AMOROSO COSTA 76 - PDF 71",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1035.6,
+        "liquido": 828.4799999999999,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489905",
+        "cidade": "RUA AMOROSO COSTA 105 - PDF 72",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1020.5,
+        "liquido": 816.3999999999999,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489132",
+        "cidade": "RUA AMOROSO COSTA 123 - PDF 73",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1001.54,
+        "liquido": 801.232,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610665299",
+        "cidade": "RUA ARI BARROSO 61 - PDF 74",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 751.2399999999999,
+        "liquido": 600.992,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610505123",
+        "cidade": "RUA ARI BARROSO 73 - PDF 75",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 718.9599999999999,
+        "liquido": 575.1679999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610371870",
+        "cidade": "RUA ARI BARROSO 80 - PDF 76",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 788.9,
+        "liquido": 631.12,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610665393",
+        "cidade": "RUA ARI BARROSO 97 - PDF 77",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 686.68,
+        "liquido": 549.3439999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610514665",
+        "cidade": "RUA ARI BARROSO 109 - PDF 78",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1074.3,
+        "liquido": 859.4399999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "61144489",
+        "cidade": "RUA SOROCABA 174 - PDF 79",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1071.48,
+        "liquido": 857.1839999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "61557400",
+        "cidade": "AV ASSIS BRASIL 1723 - PDF 80",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1345.84,
+        "liquido": 1076.672,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610492492",
+        "cidade": "RUA PADRE ALOIS KADES 400 BLOCO A - PDF 01",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2620.68,
+        "liquido": 2096.544,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610492656",
+        "cidade": "RUA GOLDA MEIR 71 - PDF 02",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1259.0,
+        "liquido": 1007.2,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501956",
+        "cidade": "RUA GOLDA MEIR 105 - PDF 03",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1644.02,
+        "liquido": 1315.216,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501959",
+        "cidade": "RUA GOLDA MEIR 115 - PDF 04",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1681.68,
+        "liquido": 1345.344,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501947",
+        "cidade": "AV BALTAZAR DE OLIVEIRA 3447 - PDF 05",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1417.06,
+        "liquido": 1133.648,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610502635",
+        "cidade": "RUA GOLDA MEIR 135 - PDF 06",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1843.08,
+        "liquido": 1474.464,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501949",
+        "cidade": "AV BALTAZAR DE OLIVEIRA 3457 - PDF 07",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1384.78,
+        "liquido": 1107.824,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "63142887",
+        "cidade": "AV ITAQUI 98 - PDF 08",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1001.54,
+        "liquido": 801.232,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507009",
+        "cidade": "RUA DOM JAIME DE BARROS CAMARA 35 - PDF 09",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 541.42,
+        "liquido": 433.136,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610505152",
+        "cidade": "RUA DOM JAIME DE BARROS CAMARA 47 - PDF 10",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 649.02,
+        "liquido": 519.216,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507386",
+        "cidade": "RUA PROF CECY CORDEIRO TOFEHRN 23 - PDF 11",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 751.2399999999999,
+        "liquido": 600.992,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507395",
+        "cidade": "AV BALTAZAR DE OLIVERIRA GARCIA 1418 - PDF 12",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 605.9799999999999,
+        "liquido": 484.7839999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610492378",
+        "cidade": "RUA FERNANDO CORTEZ 74 - PDF 13",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1089.4,
+        "liquido": 871.5199999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610371982",
+        "cidade": "RUA BRITO PEIXOTO 237 - PDF 14",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 950.56,
+        "liquido": 760.448,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486009",
+        "cidade": "RUA JOÃO DE MAGALHAES 20 - PDF 15",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 955.68,
+        "liquido": 764.544,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507354",
+        "cidade": "RUA DR DERLY MONTEIRO 90 - PDF 16",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 817.8399999999999,
+        "liquido": 654.2719999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610494165",
+        "cidade": "RUA DR DERLY MONTEIRO 145 - PDF 17",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1006.14,
+        "liquido": 804.912,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507686",
+        "cidade": "RUA DR DERLY MONTEIRO 155 - PDF 18",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 989.9999999999999,
+        "liquido": 791.9999999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610494171",
+        "cidade": "RUA DR DERLY MONTEIRO 175 - PDF 19",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1135.26,
+        "liquido": 908.2079999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610507354",
+        "cidade": "RUA DR DERLY MONTEIRO 185 - PDF 20",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1135.26,
+        "liquido": 908.2079999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610491024",
+        "cidade": "RUA RUBENS ROSA GUEDES 67 - PDF 21",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 871.64,
+        "liquido": 697.312,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610491015",
+        "cidade": "RUA RUBENS ROSA GUEDES 91 - PDF 22",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 807.0799999999999,
+        "liquido": 645.664,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610491022",
+        "cidade": "RUA RUBENS ROSA GUEDES 115 - PDF 23",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 855.4999999999999,
+        "liquido": 684.3999999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503212",
+        "cidade": "RUA RUBENS ROSA GUEDES 137 - PDF 24",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 941.5799999999999,
+        "liquido": 753.2639999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503808",
+        "cidade": "RUA RUBENS ROSA GUEDES 220 BLOCO A - PDF 25",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503452",
+        "cidade": "RUA RUBENS ROSA GUEDES 250 BLOCO A - PDF 26",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 795.32,
+        "liquido": 636.2560000000001,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503452",
+        "cidade": "RUA RUBENS ROSA GUEDES 250 BLOCO B - PDF 27",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610504902",
+        "cidade": "RUA DR EDUARDO MARQUES JR 65 - PDF 28",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 866.2599999999999,
+        "liquido": 693.0079999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "711766059",
+        "cidade": "AV PROTASIO ALVES 2209 - PDF 29",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1109.14,
+        "liquido": 887.3119999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610462987",
+        "cidade": "RUA ALBERTO TORRES 111 - PDF 30",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1066.1,
+        "liquido": 852.8799999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610446699",
+        "cidade": "RUA GIORDANO BRUNO 330 - PDF 31",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 805.04,
+        "liquido": 644.0319999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610469816",
+        "cidade": "RUA CASEMIRO DE ABREU 858 - PDF 32",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 842.6999999999999,
+        "liquido": 674.16,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610455048",
+        "cidade": "RUA PROF IVO CORSEUIL 485 - PDF 33",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 996.16,
+        "liquido": 796.928,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610621653",
+        "cidade": "RUA LAGOINHA 43 - PDF 34",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 974.64,
+        "liquido": 779.712,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610635417",
+        "cidade": "AV PADRE CACIQUE 220 BLOCO A - PDF 35",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1042.8,
+        "liquido": 834.24,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610757187",
+        "cidade": "AV PADRE CACIQUE 220 BLOCO B - PDF 36",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610464801",
+        "cidade": "AV PADRE CACIQUE 220 BLOCO C - PDF 37",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610637845",
+        "cidade": "AV PADRE CACIQUE 220 BLOCO D - PDF 38",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610637846",
+        "cidade": "AV PADRE CACIQUE 220 BLOCO E - PDF 39",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610637847",
+        "cidade": "AV PADRE CACIQUE 220 BLOCO F - PDF 40",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610339232",
+        "cidade": "AV BALTAZAR DE OLIVEIRA GARCIA 3795 BLOCO A  - PDF 41",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1185.48,
+        "liquido": 948.384,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610339232",
+        "cidade": "AV BALTAZAR DE OLIVEIRA GARCIA 3795 BLOCO B - PDF 42",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1185.48,
+        "liquido": 948.384,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610433347",
+        "cidade": "RUA DESEMBARGADOR LIMA AUGUSTO 109 - PDF 43",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 912.64,
+        "liquido": 730.112,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610663577",
+        "cidade": "RUA EDMUNDO BASTIAN 53 - PDF 44",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 954.9,
+        "liquido": 763.92,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610428915",
+        "cidade": "RUA JOAO ABBOTT 124 - PDF 45",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1087.62,
+        "liquido": 870.0959999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610448232",
+        "cidade": "RUA VASCO DA GAMA 87 - PDF 46",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 682.32,
+        "liquido": 545.856,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610509204",
+        "cidade": "RUA WASHINGTON LUIZ 22 - PDF 47",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 823.9999999999999,
+        "liquido": 659.1999999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610487404",
+        "cidade": "RUA ALIANÇA 420 - PDF 48",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 848.0799999999999,
+        "liquido": 678.4639999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700863847",
+        "cidade": "RUA ALIANÇA 448 - PDF 49",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 718.9599999999999,
+        "liquido": 575.1679999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700043844",
+        "cidade": "AV  PRES. FRANKLIN ROOSEVELT 1351 - PDF 50",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1061.72,
+        "liquido": 849.3759999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700158295",
+        "cidade": "RUA MOURA AZEVEDO 605 - PDF 51",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 826.56,
+        "liquido": 661.2479999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610488030",
+        "cidade": "RUA ASSUNÇÃO 595 - PDF 52",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 856.28,
+        "liquido": 685.024,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610502726",
+        "cidade": "RUA  PROF AMY HERVE RAMIRES 60 - PDF 53",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1445.52,
+        "liquido": 1156.416,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610483204",
+        "cidade": "RUA LARGO DA BANDEIRA 20 - PDF 54",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 842.6999999999999,
+        "liquido": 674.16,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610452452",
+        "cidade": "RUA FERNANDES VIEIRA 473 - PDF 55",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 778.14,
+        "liquido": 622.512,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "705739180",
+        "cidade": "RUA CAXIAS DO SUL 35 - PDF 56",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 622.1199999999999,
+        "liquido": 497.6959999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610594460",
+        "cidade": "AV ENG FRANCISCO R SIMCH 701 BLOCO A  - PDF 57",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1026.88,
+        "liquido": 821.5039999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610594463",
+        "cidade": "AV ENG FRANCISCO R SIMCH 701 BLOCO B - PDF 58",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1256.68,
+        "liquido": 1005.344,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610431829",
+        "cidade": "RUA  JOAO ABBOTT 125 BLOCO A - PDF 59",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 799.66,
+        "liquido": 639.728,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610431829",
+        "cidade": "RUA  JOAO ABBOTT 125 BLOCO B - PDF 60",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 783.52,
+        "liquido": 626.816,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610494730",
+        "cidade": "RUA GASTON ENGLERT 640 - PDF 61",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 797.1,
+        "liquido": 637.6800000000001,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610493556",
+        "cidade": "RUA GASTON ENGLERT 650 - PDF 62",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1012.3,
+        "liquido": 809.8399999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610494514",
+        "cidade": "RUA DR JOAO SIMPLICIO ALVES DE CARVALHO 675 - PDF 63",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 579.0799999999999,
+        "liquido": 463.264,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610494422",
+        "cidade": "RUA DR JOAO SIMPLICIO ALVES DE CARVALHO 685 - PDF 64",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 915.4599999999999,
+        "liquido": 732.3679999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610452839",
+        "cidade": "RUA GEN JOAO TELLES 453 - PDF 65",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 743.3,
+        "liquido": 594.64,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610504852",
+        "cidade": "RUA SGT SILVIO DELMAR HOLLENBACH 70 - PDF 66",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 860.88,
+        "liquido": 688.704,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662499",
+        "cidade": "RUA INDUSTRIARIOS 59 - PDF 67",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 802.1099999999999,
+        "liquido": 641.6879999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501106",
+        "cidade": "RUA GOLDA MEIR 255 BLOCO A-B - PDF 68",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1537.53,
+        "liquido": 1230.024,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610591146",
+        "cidade": "RUA VITORIO FRANCISCO GIORDANI 100 - PDF 69",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1065.73,
+        "liquido": 852.5840000000001,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700202535",
+        "cidade": "AV SÃO PEDRO 422 - PDF 70",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 693.6299999999999,
+        "liquido": 554.9039999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700123885",
+        "cidade": "RUA SÃO PEDRO 531 - PDF 01",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1612.3,
+        "liquido": 1289.84,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610666083",
+        "cidade": "RUA PROTÁSIO ALVES 4638 - PDF 02",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1959.44,
+        "liquido": 1567.552,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "701568015",
+        "cidade": "RUA MOURA AZEVEDO 415 - PDF 03",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1471.38,
+        "liquido": 1177.104,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "711488930",
+        "cidade": "RUA ALBERTO TORRES 38 - PDF 04",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1084.8,
+        "liquido": 867.8399999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610595239",
+        "cidade": "RUA ALBERTO TORRES 58 - PDF 05",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2004.26,
+        "liquido": 1603.408,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610633755",
+        "cidade": "AV PADRE CACIQUE 230 BLOCO A - PDF 06",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 3634.96,
+        "liquido": 2907.968,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610633755",
+        "cidade": "AV PADRE CACIQUE 230 BLOCO B - PDF 07",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 3634.96,
+        "liquido": 2907.968,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610633755",
+        "cidade": "AV PADRE CACIQUE 230 BLOCO C - PDF 08",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 3634.96,
+        "liquido": 2907.968,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "61656172",
+        "cidade": "RUA RUBENS ROSA GUEDES 226 BLOCO B - PDF 09",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1538.35,
+        "liquido": 1230.68,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610506710",
+        "cidade": "RUA RUBENS ROSA GUEDES 255 - PDF 10",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1451.68,
+        "liquido": 1161.344,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610502333",
+        "cidade": "RUA CARLOS ESTEVÃO 99 - PDF 11",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1926.12,
+        "liquido": 1540.896,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503011",
+        "cidade": "RUA CARLOS ESTEVÃO 95 - PDF 12",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1382.74,
+        "liquido": 1106.192,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610502986",
+        "cidade": "RUA CARLOS ESTEVÃO 77 - PDF 13",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1484.96,
+        "liquido": 1187.968,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "701243775",
+        "cidade": "AV ENG FRANCISCO R SIMCH 720 BLOCO A - PDF 14",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2483.76,
+        "liquido": 1987.008,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "701168718",
+        "cidade": "AV ENG FRANCISCO R SIMCH 720 BLOCO B - PDF 15",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2681.84,
+        "liquido": 2145.472,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "701244007",
+        "cidade": "AV ENG FRANCISCO R SIMCH 720 BLOCO C - PDF 16",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2800.16,
+        "liquido": 2240.128,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610663819",
+        "cidade": "RUA TUPANCIRETA 220 - PDF 17",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1262.34,
+        "liquido": 1009.872,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610484436",
+        "cidade": "RUA DEMETRIO RIBEIRO 454 - PDF 18",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1364.56,
+        "liquido": 1091.648,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610664885",
+        "cidade": "RUA DEMETRIO RIBEIRO 481 - PDF 19",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1273.1,
+        "liquido": 1018.48,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501225",
+        "cidade": "AV BALTAZAR OLIVEIRA GARCIA 3711 - PDF 20",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1732.44,
+        "liquido": 1385.952,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610502958",
+        "cidade": "RUA DR ROMANGUERA DA C CORREA 85 BLC A-B - PDF 21",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1238.28,
+        "liquido": 990.6239999999998,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610502955",
+        "cidade": "RUA DR ROMANGUERA DA C CORREA 35 BLC A-B - PDF 22",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1383.54,
+        "liquido": 1106.832,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610478460",
+        "cidade": "RUA DEMETRIO RIBEIRO 526 - PDF 23",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 864.2199999999999,
+        "liquido": 691.376,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610663825",
+        "cidade": "RUA TUPANCIRETA 236 - PDF 24",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 611.3599999999999,
+        "liquido": 489.0879999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610480613",
+        "cidade": "RUA DEMETRIO RIBEIRO 445 - PDF 25",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 735.0999999999999,
+        "liquido": 588.0799999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610481969",
+        "cidade": "RUA VERANÓPOLIS 543 - PDF 26",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 675.92,
+        "liquido": 540.736,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712679783",
+        "cidade": "RUA GENERAL SALUSTIANO 180 - PDF 27",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 868.82,
+        "liquido": 695.056,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610661787",
+        "cidade": "RUA VERANOPOLIS 559 - PDF 28",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 476.86,
+        "liquido": 381.4879999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486095",
+        "cidade": "RUA CRISTOVÃO PEREIRA 319 - PDF 29",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 883.18,
+        "liquido": 706.544,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62838559",
+        "cidade": "RUA VERANOPOLIS 583 - PDF 30",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 713.5799999999999,
+        "liquido": 570.8639999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610661753",
+        "cidade": "AV DOS INDUSTRIARIOS 280 - PDF 31",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 638.2599999999999,
+        "liquido": 510.6079999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "711766016",
+        "cidade": "RUA ALVARES MACHADO 118 - PDF 32",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1383.78,
+        "liquido": 1107.024,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62447133",
+        "cidade": "RUA GOLDA MEIR 260 - PDF 33",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1878.72,
+        "liquido": 1502.976,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610311692",
+        "cidade": "RUA VERANOPOLIS 830 - PDF 34",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 562.9399999999999,
+        "liquido": 450.352,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610661971",
+        "cidade": "RUA VERANOPOLIS 591 - PDF 35",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 718.9599999999999,
+        "liquido": 575.1679999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610483780",
+        "cidade": "AV BRASILIANO INDIO DE MORAES 567 - PDF 36",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 600.5999999999999,
+        "liquido": 480.4799999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610481139",
+        "cidade": "AV DOS INDUSTRIARIOS 488 - PDF 37",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 955.68,
+        "liquido": 764.544,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610447773",
+        "cidade": "RUA DA LEOPOLDINA 374 - PDF 38",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 901.88,
+        "liquido": 721.504,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700722083",
+        "cidade": "AV BRASILIANO INDIO DE MORAES 557 - PDF 39",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 584.4599999999999,
+        "liquido": 467.5679999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610513998",
+        "cidade": "RUA DA LEOPOLDINA 392 - PDF 40",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 880.3599999999999,
+        "liquido": 704.2879999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610430818",
+        "cidade": "RUA DESEMBARGADOR LIMA AUGUSTO 141 - PDF 41",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 971.8199999999999,
+        "liquido": 777.4559999999999,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610497829",
+        "cidade": "RUA DESEMBARGADOR LIMA 35 - PDF 42",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 794.28,
+        "liquido": 635.424,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610442085",
+        "cidade": "RUA AMELIA TELES 105 - PDF 43",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 616.7399999999999,
+        "liquido": 493.3919999999999,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610472540",
+        "cidade": "AV TAQUARY 727 - PDF 44",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1304.08,
+        "liquido": 1043.264,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "61364303",
+        "cidade": "RUA GEN LIMA E SILVA 427 - PDF 45",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 767.3799999999999,
+        "liquido": 613.9039999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610484130",
+        "cidade": "RUA DR. LOSSIO 234 - PDF 46",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 845.52,
+        "liquido": 676.4159999999999,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610499508",
+        "cidade": "AV.PROTASIO ALVES 4495 - PDF 47",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 723.5600000000001,
+        "liquido": 578.8480000000001,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610460759",
+        "cidade": "RUA GEN LIMA E SILVA 445 - PDF 48",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 2096.24,
+        "liquido": 1676.992,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610479339",
+        "cidade": "AV INDEPENDÊNCIA 330 - PDF 49",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1496.76,
+        "liquido": 1197.408,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "709260359",
+        "cidade": "RUA GIORDANO BRUNO 179 - PDF 50",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 686.68,
+        "liquido": 549.3439999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610481763",
+        "cidade": "RUA DEMETRIO RIBEIRO 851 - PDF 51",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 813.2399999999999,
+        "liquido": 650.5919999999999,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610460785",
+        "cidade": "RUA GIORDANO BRUNO 245 - PDF 52",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 638.2599999999999,
+        "liquido": 510.6079999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610448484",
+        "cidade": "RUA GIORDANO BRUNO 271 - PDF 53",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 718.9599999999999,
+        "liquido": 575.1679999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700723757",
+        "cidade": "RUA VERANOPOLIS 567 - PDF 54",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 537.8399999999999,
+        "liquido": 430.2719999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610456165",
+        "cidade": "RUA JACINTO GOMES 442 - PDF 55",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 514.52,
+        "liquido": 411.616,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610479406",
+        "cidade": "RUA ANDRÉ DA ROCHA 20 - PDF 56",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1604.0,
+        "liquido": 1283.2,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610456300",
+        "cidade": "RUA JACINTO GOMES 465 - PDF 57",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 616.7399999999999,
+        "liquido": 493.3919999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610455778",
+        "cidade": "RUA JACINTO GOMES 480 - PDF 58",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 482.24,
+        "liquido": 385.792,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610449382",
+        "cidade": "RUA LUZITANA 219 - PDF 59",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 791.7199999999999,
+        "liquido": 633.376,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610291178",
+        "cidade": "RUA EVARISTO DA VEIGA 111 - PDF 60",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 831.9399999999999,
+        "liquido": 665.5519999999999,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610483569",
+        "cidade": "RUA EVARISTO DA VEIGA 196 - PDF 61",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 783.52,
+        "liquido": 626.816,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610431159",
+        "cidade": "RUA CASSEMIRO DE ABREU 895 - PDF 62",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1081.46,
+        "liquido": 865.168,
+        "tecnico": "VINICIUS DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610631517",
+        "cidade": "AV BALTAZAR DE OLIVEIRA GARCIA 3221 BLOCO A - PDF 63",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 845.52,
+        "liquido": 676.4159999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610631517",
+        "cidade": "AV BALTAZAR DE OLIVEIRA GARCIA 3221 BLOCO B - PDF 64",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 823.9999999999999,
+        "liquido": 659.1999999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62587423",
+        "cidade": "RUA GOLDA MEIR 325 - PDF 65",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 899.3199999999999,
+        "liquido": 719.4559999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610486349",
+        "cidade": "RUA AÇORES 45 - PDF 66",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1070.7,
+        "liquido": 856.5599999999998,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503478",
+        "cidade": "RUA BALTAZAR DE OLIVEIRA GARCIA 3275 BLOCO A - PDF 67",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 861.66,
+        "liquido": 689.328,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610485565",
+        "cidade": "RUA AÇORES 86 - PDF 68",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 595.2199999999999,
+        "liquido": 476.1759999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610503478",
+        "cidade": "RUA BALTAZAR DE OLIVEIRA GARCIA 3275 BLOCO B - PDF 69",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 759.4399999999999,
+        "liquido": 607.5519999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610459146",
+        "cidade": "TV FERREIRA DE ABREU 101 - PDF 70",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 552.18,
+        "liquido": 441.744,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610441320",
+        "cidade": "RUA BAGÉ 543 - PDF 71",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1230.32,
+        "liquido": 984.2560000000001,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610509646",
+        "cidade": "RUA GIORDANO BRUNO 63 - PDF 72",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 794.28,
+        "liquido": 635.424,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712895595",
+        "cidade": "RUA BR DO GRAVATAI 587 - PDF 73",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 821.18,
+        "liquido": 656.944,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610452017",
+        "cidade": "RUA GIORDANO BRUNO 236 - PDF 74",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 934.16,
+        "liquido": 747.328,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610457734",
+        "cidade": "TV FERREIRA DE ABREU 41 - PDF 75",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1088.4,
+        "liquido": 870.7199999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610664699",
+        "cidade": "AV PROTASIO ALVES 5581 - PDF 76",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 864.2199999999999,
+        "liquido": 691.376,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610457847",
+        "cidade": "TV FERREIRA DE ABREU 116 - PDF 77",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 659.78,
+        "liquido": 527.824,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610458509",
+        "cidade": "TV FERREIRA DE ABREU 142 - PDF 78",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 482.24,
+        "liquido": 385.792,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "63093552",
+        "cidade": "AV BALTAZAR DE OLIVEIRA GARCIA 2949 - PDF 79",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 458.92,
+        "liquido": 367.136,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662695",
+        "cidade": "RUA VERANOPOLIS 551 - PDF 80",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 849.8799999999999,
+        "liquido": 679.9039999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610513141",
+        "cidade": "RUA LASAR SEGALL 70 - PDF 81",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 423.06,
+        "liquido": 338.448,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610105228",
+        "cidade": "RUA GENERAL COUTO DE MAGALHAES 1159 - PDF 82",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1790.32,
+        "liquido": 1432.256,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610479689",
+        "cidade": "RUA DEMETRIO RIBEIRO 814 - PDF 83",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 816.06,
+        "liquido": 652.848,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610511693",
+        "cidade": "RUA ALBERTO TORRES 88 - PDF 84",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 718.9599999999999,
+        "liquido": 575.1679999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610465508",
+        "cidade": "RUA ALBERTO TORRES 92 - PDF 85",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 423.06,
+        "liquido": 338.448,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610106002",
+        "cidade": "RUA MQ DO POMBAL 351 - PDF 86",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 707.42,
+        "liquido": 565.9359999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610459438",
+        "cidade": "RUA GIORDANO BRUNO 302 - PDF 87",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 788.9,
+        "liquido": 631.12,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489181",
+        "cidade": "AV PANAMERICANA 731 - PDF 88",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 826.56,
+        "liquido": 661.2479999999999,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610460818",
+        "cidade": "RUA SARMENTO LEITE 926 - PDF 89",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 869.86,
+        "liquido": 695.888,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610460646",
+        "cidade": "RUA GEN LIMA E SILVA 377 - PDF 90",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1160.38,
+        "liquido": 928.3040000000001,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "611099495",
+        "cidade": "RUA ALBERTO TORRES 108 - PDF 91",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 826.56,
+        "liquido": 661.2479999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610461879",
+        "cidade": "RUA ALBERTO TORRES 135 - PDF 92",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 761.2199999999999,
+        "liquido": 608.9759999999999,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610505132",
+        "cidade": "RUA ARI BARROSO 116 - PDF 93",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 788.9,
+        "liquido": 631.12,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610505327",
+        "cidade": "RUA ARI BARROSO 94 - PDF 94",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 799.66,
+        "liquido": 639.728,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610456304",
+        "cidade": "RUA JACINTO GOMES 409 - PDF 95",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 751.2399999999999,
+        "liquido": 600.992,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610500947",
+        "cidade": "RUA DR CARLOS MARIA BINS 80 - PDF 96",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 743.3,
+        "liquido": 594.64,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501228",
+        "cidade": "RUA GOLDA MEIR 285 - PDF 97",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1424.26,
+        "liquido": 1139.408,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501112",
+        "cidade": "RUA GOLDA MEIR 333 BLOCO A - PDF 98",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 861.66,
+        "liquido": 689.328,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610501112",
+        "cidade": "RUA GOLDA MEIR 333 BLOCO B - PDF 99",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 940.58,
+        "liquido": 752.464,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700845379",
+        "cidade": "AV GEN EMILIO LUCIO ESTEVES 118 - PDF 100",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 945.18,
+        "liquido": 756.144,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "371113308",
+        "cidade": "RUA GUAPORE 280 - PDF 01",
+        "endereco": "CANOAS",
+        "bruto": 1090.18,
+        "liquido": 872.1439999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364382319",
+        "cidade": "RUA BRASIL 1169 - PDF 02",
+        "endereco": "CANOAS",
+        "bruto": 1967.38,
+        "liquido": 1573.904,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364028345",
+        "cidade": "RUA MATHIAS VELHO 717 - PDF 03",
+        "endereco": "CANOAS",
+        "bruto": 1448.08,
+        "liquido": 1158.464,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364709996",
+        "cidade": "RUA MATHIAS VELHO 911 - PDF 04",
+        "endereco": "CANOAS",
+        "bruto": 1535.16,
+        "liquido": 1228.128,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364615148",
+        "cidade": "RUA REPUBLICA 2708 BLOCOS A,B,C,E - PDF 05",
+        "endereco": "CANOAS",
+        "bruto": 2024.0,
+        "liquido": 1619.2,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364615148",
+        "cidade": "RUA REPUBLICA 2708 BLOCOS D,F,G,H,J - PDF 06",
+        "endereco": "CANOAS",
+        "bruto": 1693.0,
+        "liquido": 1354.4,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364615148",
+        "cidade": "RUA REPUBLICA 2708 BLOCOS I,L,M,N,P - PDF 07",
+        "endereco": "CANOAS",
+        "bruto": 1558.5,
+        "liquido": 1246.8,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364615148",
+        "cidade": "RUA REPUBLICA 2708 BLOCOS O,Q,R,U - PDF 08",
+        "endereco": "CANOAS",
+        "bruto": 1843.64,
+        "liquido": 1474.912,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "364615148",
+        "cidade": "RUA REPUBLICA 2708 BLOCOS S,T,V - PDF 09",
+        "endereco": "CANOAS",
+        "bruto": 1265.16,
+        "liquido": 1012.128,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610491082",
+        "cidade": "RUA DR DERLY MONTEIRO 75 - PDF 10",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1425.78,
+        "liquido": 1140.624,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610136012",
+        "cidade": "RUA DR DERLY MONTEIRO 85 - PDF 11",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1342.26,
+        "liquido": 1073.808,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610491089",
+        "cidade": "RUA DR DERLY MONTEIRO 95 - PDF 12",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1662.5,
+        "liquido": 1330.0,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "701668205",
+        "cidade": "RUA TENENTE ARY TARRAGO 1981 - PDF 13",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1464.22,
+        "liquido": 1171.376,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610473991",
+        "cidade": "RUA VERANOPOLIS 814 - PDF 14",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1278.48,
+        "liquido": 1022.784,
+        "tecnico": "MARCOS MARTINS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610504357",
+        "cidade": "RUA GOLDA MEIR 373 BLOCO A - PDF 15",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1270.54,
+        "liquido": 1016.432,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610504357",
+        "cidade": "RUA GOLDA MEIR 373 BLOCO B - PDF 16",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1184.46,
+        "liquido": 947.5679999999999,
+        "tecnico": "MURILO DIDIO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610484809",
+        "cidade": "RUA PE HILDEBRANDO 649 - PDF 17",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1359.18,
+        "liquido": 1087.344,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "708435034",
+        "cidade": "AV INDEPENDENCIA 809 - PDF 18",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1391.46,
+        "liquido": 1113.168,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662055",
+        "cidade": "RUA JACINTO GOMES 376 - PDF 19",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1396.84,
+        "liquido": 1117.472,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610585362",
+        "cidade": "RUA FRANCISCO DE AQUINO 103 - PDF 20",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1256.96,
+        "liquido": 1005.568,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610467421",
+        "cidade": "RUA GEN LIMA E SILVA 395 - PDF 21",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1316.14,
+        "liquido": 1052.912,
+        "tecnico": "GEM TELECOM",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610467421",
+        "cidade": "RUA LEÃO XIII 7 - PDF 22",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1052.52,
+        "liquido": 842.016,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610277900",
+        "cidade": "RUA LEÃO XIII 38 - PDF 23",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 837.3199999999999,
+        "liquido": 669.856,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610462238",
+        "cidade": "RUA LEÃO XIII 50 - PDF 24",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 874.9799999999999,
+        "liquido": 699.9839999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610471713",
+        "cidade": "RUA LEÃO XIII 67 - PDF 25",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 546.8,
+        "liquido": 437.4399999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610461047",
+        "cidade": "RUA LEÃO XIII 70 - PDF 26",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 616.7399999999999,
+        "liquido": 493.3919999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610466285",
+        "cidade": "RUA LEÃO XIII 33 - PDF 27",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 616.7399999999999,
+        "liquido": 493.3919999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610661521",
+        "cidade": "RUA LEÃO XIII 121 - PDF 28",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 455.34,
+        "liquido": 364.272,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610466277",
+        "cidade": "RUA LEÃO XIII 137 - PDF 29",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 530.66,
+        "liquido": 424.528,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610487342",
+        "cidade": "RUA GUADALUPE 125 - PDF 30",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 996.16,
+        "liquido": 796.928,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610487445",
+        "cidade": "RUA SANTA TECLA 250 - PDF 31",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 988.2199999999999,
+        "liquido": 790.5759999999999,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489448",
+        "cidade": "RUA SANTA TECLA 300 - PDF 32",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 813.2399999999999,
+        "liquido": 650.5919999999999,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610460425",
+        "cidade": "RUA SARMENTO LEITE 965 - PDF 33",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 958.4999999999999,
+        "liquido": 766.8,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662603",
+        "cidade": "AV BRASILIANO INDIO DE MORAES 589 - PDF 34",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 761.9999999999999,
+        "liquido": 609.5999999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "705028490",
+        "cidade": "RUA LIBIA 286 - PDF 35",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1160.12,
+        "liquido": 928.0959999999999,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610492782",
+        "cidade": "RUA MONTEIRO LOBATO 283 - PDF 36",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 903.7199999999999,
+        "liquido": 722.9759999999999,
+        "tecnico": "GUILHERME ALBRECHT",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610499561",
+        "cidade": "RUA ORFANOTROFIO 920 BLOCO 50 - PDF 37",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1423.04,
+        "liquido": 1138.432,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610676823",
+        "cidade": "RUA ORFANOTROFIO 920 BLOCO 51 - PDF 38",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 904.6999999999999,
+        "liquido": 723.76,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610631467",
+        "cidade": "RUA ORFANOTROFIO 920 BLOCO 52 - PDF 39",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 694.88,
+        "liquido": 555.904,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610490164",
+        "cidade": "RUA PRESIDENTE JUAREZ 50 - PDF 40",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1233.66,
+        "liquido": 986.9280000000001,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610489273",
+        "cidade": "RUA PRESIDENTE JUAREZ 10 - PDF 41",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 880.3599999999999,
+        "liquido": 704.2879999999999,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610662797",
+        "cidade": "RUA SAO GERONIMO 82 - PDF 42",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 724.3399999999999,
+        "liquido": 579.472,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610462729",
+        "cidade": "RUA SARMENTO LEITE 836 - PDF 43",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 797.1,
+        "liquido": 637.6800000000001,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610487426",
+        "cidade": "RUA FILIPINAS 305 - PDF 44",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1036.38,
+        "liquido": 829.104,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610466281",
+        "cidade": "RUA LEÃO XIII 97 - PDF 45",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 482.24,
+        "liquido": 385.792,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610465035",
+        "cidade": "RUA SARMENTO LEITE 844 - PDF 46",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 408.74,
+        "liquido": 326.992,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610460613",
+        "cidade": "RUA SARMENTO LEITE 851 - PDF 47",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 910.08,
+        "liquido": 728.0640000000001,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610458179",
+        "cidade": "RUA TRAV FERREIRA DE ABREU 51 - PDF 48",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 724.3399999999999,
+        "liquido": 579.472,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610487387",
+        "cidade": "RUA SANTA TECLA 285 - PDF 49",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 815.8,
+        "liquido": 652.64,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "2504787",
+        "cidade": "RUA FILIPINAS 250 - PDF 50",
+        "endereco": "PORTO ALEGRE",
+        "bruto": 1001.54,
+        "liquido": 801.232,
+        "tecnico": "ABRAÃO RODRIGUES",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380665",
+        "cidade": "RUA GEN OSORIO 956 - PDF 01",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 514.52,
+        "liquido": 411.616,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700715013",
+        "cidade": "AV FREDERICO LINCK 909 - PDF 02",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 622.1199999999999,
+        "liquido": 497.6959999999999,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610161950",
+        "cidade": "RUA TUPI 1075 - PDF 03",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 963.88,
+        "liquido": 771.104,
+        "tecnico": "GABRIEL DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610381344",
+        "cidade": "RUA MARQUES DE SAPUCAI 65 - PDF 04",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 834.76,
+        "liquido": 667.808,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380796",
+        "cidade": "RUA GUANANAS 38 - PDF 05",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1077.12,
+        "liquido": 861.6959999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62547630",
+        "cidade": "RUA BENJAMIN CONSTANT 378 - PDF 06",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 708.1999999999999,
+        "liquido": 566.56,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62757652",
+        "cidade": "AV PEDRO ADAMS FILHO 2050 - PDF 07",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1106.32,
+        "liquido": 885.0559999999999,
+        "tecnico": "LUIS HENRIQUE RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380884",
+        "cidade": "RUA ONOFRE PIRES 299 - PDF 08",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 990.78,
+        "liquido": 792.624,
+        "tecnico": "LUIS HENRIQUE RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380794",
+        "cidade": "RUA ONOFRE PIRES 285 - PDF 09",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 969.26,
+        "liquido": 775.408,
+        "tecnico": "LUIS HENRIQUE RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610050080",
+        "cidade": "RUA PEDRO ADAMS FILHO 2250 - PDF 10",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1759.58,
+        "liquido": 1407.664,
+        "tecnico": "LUIS HENRIQUE RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712283476",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 1 - PDF 11",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 746.12,
+        "liquido": 596.896,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265654",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 2 - PDF 12",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 869.86,
+        "liquido": 695.888,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265686",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 3 - PDF 13",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1187.28,
+        "liquido": 949.824,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712266208",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 4 - PDF 14",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1031.26,
+        "liquido": 825.008,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265707",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 5 - PDF 15",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1095.82,
+        "liquido": 876.6560000000002,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265752",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 6 - PDF 16",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 977.4599999999999,
+        "liquido": 781.968,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265773",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 7 - PDF 17",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 875.24,
+        "liquido": 700.192,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265798",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 8 - PDF 18",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 789.16,
+        "liquido": 631.328,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712266183",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 9 - PDF 19",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 945.18,
+        "liquido": 756.144,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265569",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 10 - PDF 20",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1101.2,
+        "liquido": 880.9599999999998,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712266437",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 11 - PDF 21",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1031.26,
+        "liquido": 825.008,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712266459",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 12 - PDF 22",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 961.32,
+        "liquido": 769.056,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265595",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 13 - PDF 23",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1047.4,
+        "liquido": 837.9200000000001,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712265629",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 14 - PDF 24",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1445.52,
+        "liquido": 1156.416,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "712266466",
+        "cidade": "RUA GUIA LOPES 3070 BLOCO 15 - PDF 25",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1450.9,
+        "liquido": 1160.72,
+        "tecnico": "MARCOS VINICIUS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380190",
+        "cidade": "RUA DR MAGALHAES CALVET 770 - PDF 26",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1095.82,
+        "liquido": 876.6560000000002,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610381364",
+        "cidade": "RUA PRIMEIRO DE MAIO 491 - PDF 27",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 939.54,
+        "liquido": 751.632,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "61340874",
+        "cidade": "RUA MARCILIO DIAS 304 - PDF 28",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1475.98,
+        "liquido": 1180.784,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610381114",
+        "cidade": "RUA EDUARDO DA S PRADO 62 BLOCO A - PDF 29",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "INOIR SANTOS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "61758141",
+        "cidade": "RUA EDUARDO DA S PRADO 62 BLOCO B - PDF 30",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 934.1999999999999,
+        "liquido": 747.3599999999999,
+        "tecnico": "INOIR SANTOS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62557518",
+        "cidade": "RUA EDUARDO DA S PRADO 62 BLOCO C - PDF 31",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "INOIR SANTOS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "62296536",
+        "cidade": "RUA EDUARDO DA S PRADO 62 BLOCO D - PDF 32",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 261.66,
+        "liquido": 209.328,
+        "tecnico": "INOIR SANTOS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610319136",
+        "cidade": "RUA RAIMUNDO CORREA 609 - PDF 33",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1488.82,
+        "liquido": 1191.056,
+        "tecnico": "GABRIEL DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380243",
+        "cidade": "RUA CRISTOVAO COLOMBO 15 - PDF 34",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 675.92,
+        "liquido": 540.736,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380638",
+        "cidade": "RUA CRISTOVAO COLOMBO 35 - PDF 35",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 915.4599999999999,
+        "liquido": 732.3679999999999,
+        "tecnico": "DAVID SALOMÃO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610236464",
+        "cidade": "RUA JOAQUIM PEDRO SOARES 317 - PDF 36",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1100.94,
+        "liquido": 880.7519999999998,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380225",
+        "cidade": "RUA VINTE E CINCO DE JULHO 1420 - PDF 37",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 760.4399999999999,
+        "liquido": 608.352,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610350614",
+        "cidade": "RUA VINTE E CINCO DE JULHO 1430 - PDF 38",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 991.7799999999999,
+        "liquido": 793.4239999999999,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380218",
+        "cidade": "RUA VINTE E CINCO DE JULHO 1434 - PDF 39",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 921.8399999999999,
+        "liquido": 737.472,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610654944",
+        "cidade": "RUA JOSE DO PATROCINIO 821 - PDF 40",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 850.9,
+        "liquido": 680.72,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "700739937",
+        "cidade": "RUA CONFRATERNIZAÇÃO 514 - PDF 41",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 918.28,
+        "liquido": 734.624,
+        "tecnico": "GABRIEL DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610382174",
+        "cidade": "RUA JOSE DE ALENCAR 195 - PDF 42",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1140.02,
+        "liquido": 912.016,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610381930",
+        "cidade": "AV PEDRO ADAMS FILHO 4863 - PDF 43",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 689.5,
+        "liquido": 551.6,
+        "tecnico": "LUIS HENRIQUE RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610907975",
+        "cidade": "AV PEDRO ADAMS FILHO 4710 - PDF 44",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1198.04,
+        "liquido": 958.432,
+        "tecnico": "GABRIEL DE BRITO",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610729792",
+        "cidade": "RUA DR MAGALHAES CALVET 900 - PDF 45",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1198.04,
+        "liquido": 958.432,
+        "tecnico": "INOIR SANTOS",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610379498",
+        "cidade": "RUA DOS ANDRADAS 32 - PDF 46",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 770.1999999999999,
+        "liquido": 616.16,
+        "tecnico": "PAULO KEIBER",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610379841",
+        "cidade": "RUA SALDANHA MARINHO 37 - PDF 47",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 1203.42,
+        "liquido": 962.7360000000001,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380239",
+        "cidade": "RUA CRISTOVÃO COLOMBO 3 - PDF 48",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 530.66,
+        "liquido": 424.528,
+        "tecnico": "-",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610379710",
+        "cidade": "RUA CONFRATERNIZAÇÃO 307 - PDF 49",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 460.72,
+        "liquido": 368.576,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    },
+    {
+        "codged": "610380607",
+        "cidade": "RUA CONFRATERNIZAÇÃO 295 - PDF 50",
+        "endereco": "NOVO HAMBURGO",
+        "bruto": 568.3199999999999,
+        "liquido": 454.6559999999999,
+        "tecnico": "PAULO RIBACZKI",
+        "pago_tech": 0.0,
+        "margem_val": 0.0,
+        "margem_pct": 0.0
+    }
+];
+        let filteredData = [...addressData];
+        let currentPage = 1;
+        const rowsPerPage = 25;
+
+        function filterAddresses() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const status = document.getElementById('filter-status').value;
+            
+            filteredData = addressData.filter(item => {
+                const matchesQuery = item.endereco.toLowerCase().includes(query) || 
+                                     item.cidade.toLowerCase().includes(query) || 
+                                     item.tecnico.toLowerCase().includes(query) ||
+                                     item.codged.toLowerCase().includes(query);
+                                     
+                let matchesStatus = true;
+                if (status === 'lucrativo') {
+                    matchesStatus = item.margem_val >= 0;
+                } else if (status === 'deficitario') {
+                    matchesStatus = item.margem_val < 0;
+                }
+                
+                return matchesQuery && matchesStatus;
+            });
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('search-table-body');
+            tbody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
+            
+            const pageItems = filteredData.slice(startIndex, endIndex);
+            
+            if (pageItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--text-muted); font-weight: 500;">Nenhum endereço encontrado para os filtros aplicados.</td></tr>`;
+                document.getElementById('pagination-info').innerText = 'Exibindo 0 de 0 endereços';
+                document.getElementById('pagination-buttons').innerHTML = '';
+                return;
+            }
+            
+            pageItems.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid #f1f5f9';
+                
+                const isDeficit = item.margem_val < 0;
+                const colorStyle = isDeficit ? 'color: var(--danger); font-weight: 600;' : 'color: var(--success); font-weight: 600;';
+                
+                tr.innerHTML = `
+                    <td style="padding: 10px;">${item.codged}</td>
+                    <td style="padding: 10px; font-weight: 600; color: var(--text-dark);">${item.endereco}</td>
+                    <td style="padding: 10px;">${item.cidade}</td>
+                    <td style="padding: 10px; text-align: right;">${formatCurrency(item.bruto)}</td>
+                    <td style="padding: 10px; text-align: right;">${formatCurrency(item.liquido)}</td>
+                    <td style="padding: 10px;">${item.tecnico || '<span style="color: #94a3b8;">-</span>'}</td>
+                    <td style="padding: 10px; text-align: right;">${formatCurrency(item.pago_tech)}</td>
+                    <td style="padding: 10px; text-align: right; ${colorStyle}">${formatCurrency(item.margem_val)}</td>
+                    <td style="padding: 10px; text-align: right; ${colorStyle}">${item.margem_pct.toFixed(2)}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            document.getElementById('pagination-info').innerText = `Exibindo ${startIndex + 1} - ${endIndex} de ${filteredData.length} endereços`;
+            
+            renderPaginationControls();
+        }
+
+        function renderPaginationControls() {
+            const container = document.getElementById('pagination-buttons');
+            container.innerHTML = '';
+            
+            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+            if (totalPages <= 1) return;
+            
+            // Previous Button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'tab-btn';
+            prevBtn.style.padding = '6px 12px';
+            prevBtn.style.fontSize = '0.78rem';
+            prevBtn.style.borderRadius = '6px';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.innerText = 'Anterior';
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            };
+            container.appendChild(prevBtn);
+            
+            // Page buttons (limit to showing current page and neighbors)
+            let startPage = Math.max(1, currentPage - 1);
+            let endPage = Math.min(totalPages, currentPage + 1);
+            
+            if (currentPage === 1) {
+                endPage = Math.min(totalPages, 3);
+            }
+            if (currentPage === totalPages) {
+                startPage = Math.max(1, totalPages - 2);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn' + (i === currentPage ? ' active' : '');
+                btn.style.padding = '6px 12px';
+                btn.style.fontSize = '0.78rem';
+                btn.style.borderRadius = '6px';
+                btn.innerText = i;
+                btn.onclick = () => {
+                    currentPage = i;
+                    renderTable();
+                };
+                container.appendChild(btn);
+            }
+            
+            // Next Button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'tab-btn';
+            nextBtn.style.padding = '6px 12px';
+            nextBtn.style.fontSize = '0.78rem';
+            nextBtn.style.borderRadius = '6px';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.innerText = 'Próximo';
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            };
+            container.appendChild(nextBtn);
+        }
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        }
+
+</script>
 </body>
 </html>
